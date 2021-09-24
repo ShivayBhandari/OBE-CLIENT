@@ -1,13 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './gaurds/auth.guard';
 import { AdminComponent } from './layouts/admin/admin.component';
 import { AuthComponent } from './layouts/auth/auth.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
+  },
   {
     path: '',
     component: AdminComponent,
+    canActivate: [AuthGuard],
     children: [
       {
         path: '',
@@ -25,6 +31,9 @@ const routes: Routes = [
       }
     ]
   },
+  // {
+  //   path: '**'
+  // }
 ];
 
 @NgModule({
