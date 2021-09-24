@@ -1,0 +1,16 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { CoMappingComponent } from 'src/app/pages/co-mapping/co-mapping.component';
+import { CoursesComponent } from 'src/app/pages/courses/courses.component';
+
+const routes: Routes = [
+  { path: '', redirectTo: 'courses', pathMatch: 'full' },
+  { path: 'courses', component: CoursesComponent },
+  { path: 'co-mapping', component: CoMappingComponent }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class CurriculumRoutingModule { }
