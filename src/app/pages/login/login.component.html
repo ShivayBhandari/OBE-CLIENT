@@ -21,37 +21,52 @@
               <h5 class="text-center">Login Details</h5>
             </div>
             <div class="card-body">
-              <div class="row">
-                <div class="form-group col-12">
-                  <label for="email" class="text-sm text-muted">Enter Email</label>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text material-icons bg-white">
-                        email
-                      </span>
+              <form [formGroup]="loginForm" (ngSubmit)="loginUser(loginForm)">
+                <div class="row">
+                  <div class="form-group col-12">
+                    <label for="email" class="text-sm text-muted">Enter Email</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text material-icons bg-white">
+                          email
+                        </span>
+                      </div>
+                      <input type="email" name="email" formControlName="email" class="form-control"
+                        placeholder="eg: john@example.in">
                     </div>
-                    <input type="email" name="email" class="form-control" placeholder="eg: john@example.in">
                   </div>
-                </div>
-                <div class="form-group col-12">
-                  <label for="email" class="text-sm text-muted">Enter Pasword</label>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text material-icons bg-white">
-                        password
-                      </span>
+                  <div class="form-group col-12">
+                    <label for="email" class="text-sm text-muted">Enter Pasword</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text material-icons bg-white">
+                          password
+                        </span>
+                      </div>
+                      <input type="password" name="password" formControlName="password" class="form-control"
+                        placeholder="eg: *********">
                     </div>
-                    <input type="password" name="password" class="form-control" placeholder="eg: *********">
                   </div>
                 </div>
-              </div>
-              <div class="row" style="margin-top: 1.4rem;">
-                <div class="col">
-                  <div class="d-flex justify-content-center">
-                    <button class="btn btn-dark">Login</button>
+                <div class="row" *ngIf="errorMsg != undefined">
+                  <div class="col-12">
+                    <p class="alert alert-danger text-center">{{ errorMsg }}</p>
                   </div>
                 </div>
-              </div>
+                <div class="row" style="margin-top: 1.4rem;">
+                  <div class="col">
+                    <div class="d-flex justify-content-center">
+                      <button type="submit" class="btn btn-dark">
+                        Login
+                        <span *ngIf="loader">&nbsp;</span>
+                        <div *ngIf="loader" class="spinner-border spinner-border-sm text-light" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
