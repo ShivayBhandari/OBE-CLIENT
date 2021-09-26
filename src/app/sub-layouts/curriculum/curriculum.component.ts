@@ -1,5 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 
+export interface RouteInfo {
+  path: string;
+  title: string;
+  icon: string;
+  class: string;
+  children?: RouteInfo[];
+}
+
+export const ROUTES: RouteInfo[] = [
+  { path: 'courses', title: 'Courses', icon: 'book', class: '', children: [] },
+  { path: 'co-mapping', title: 'CO Mapping', icon: 'map', class: '', children: [] },
+];
+
 @Component({
   selector: 'app-curriculum',
   templateUrl: './curriculum.component.html',
@@ -7,9 +20,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CurriculumComponent implements OnInit {
 
+  menuItems: RouteInfo[] | undefined;
+
   constructor() { }
 
   ngOnInit(): void {
+    this.menuItems = ROUTES.map(e => e);
   }
 
 }
