@@ -1,12 +1,15 @@
 <header class="bg-dark text-white p-2">
-  <div class="row w-100">
-    <div class="col-12 col-sm-6">
-      <div class="d-flex flex-column">
-        <h4 class="m-0 mb-1">Outcome Based Education</h4>
-        <h6 class="m-0">Guru Nanak Dev Engineering College, Ludhiana</h6>
+  <div class="row w-100 m-0">
+    <div class="col-12 col-sm-6 px-0">
+      <div class="d-flex">
+        <img src="./../../../assets/gndec-logo.png" alt="" class="d-none d-sm-block mr-2" width="54px" height="54px">
+        <div class="d-flex flex-column text-center text-sm-left">
+          <h4 class="m-0 mb-1">Outcome Based Education</h4>
+          <h6 class="m-0">Guru Nanak Dev Engineering College, Ludhiana</h6>
+        </div>
       </div>
     </div>
-    <div class="col-12 col-sm-6 px-0">
+    <div class="col-12 col-sm-6 d-none d-sm-block">
       <div class="d-flex align-items-center justify-content-end">
         <button class="btn btn-light mt-1" (click)="logOut()">Logout</button>
       </div>
@@ -20,9 +23,15 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item" *ngFor="let item of menuItems; index as idx">
-        <a class="nav-link d-flex align-items-center" [routerLink]="[item.path]" routerLinkActive="active">
+        <a class="nav-link d-flex align-items-center" [routerLink]="[item.path]" [replaceUrl]="true" routerLinkActive="active">
           <span class="material-icons">{{ item.icon }}</span> &nbsp;
           {{ item.title }}
+        </a>
+      </li>
+      <li class="nav-item d-block d-sm-none">
+        <a class="nav-link d-flex align-items-center" (click)="logOut()">
+          <span class="material-icons">logout</span> &nbsp;
+          Logout
         </a>
       </li>
     </ul>

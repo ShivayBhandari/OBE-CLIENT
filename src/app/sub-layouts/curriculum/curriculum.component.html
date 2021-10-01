@@ -4,9 +4,9 @@
       <div class="card">
         <div class="card-body px-0 py-2">
           <nav class="navbar navbar-light px-0">
-            <ul class="navbar-nav flex-sm-colum">
+            <ul class="navbar-nav flex-colum">
               <li class="nav-item" *ngFor="let item of menuItems; index as idx">
-                <a class="nav-link d-flex align-items-center px-2" [routerLink]="[item.path]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <a class="nav-link d-flex align-items-center px-2" [routerLink]="[item.path]" [replaceUrl]="true" routerLinkActive="active">
                   <span class="material-icons">{{ item.icon }}</span> &nbsp;
                   {{ item.title }}
                 </a>
