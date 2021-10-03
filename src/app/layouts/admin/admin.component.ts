@@ -25,6 +25,7 @@ export const ROUTES: RouteInfo[] = [
 export class AdminComponent implements OnInit {
 
   menuItems: RouteInfo[] | undefined;
+  user: any;
 
   constructor(
     private router: Router,
@@ -33,9 +34,11 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.menuItems = ROUTES.map(e => e);
+    this.user = JSON.parse(localStorage.getItem('user') || "");
   }
 
   logOut() {
+    localStorage.clear();
     this.cookieService.deleteAll();
     this.router.navigate(['/login'], { replaceUrl: true });
   }

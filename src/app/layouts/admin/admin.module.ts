@@ -6,17 +6,21 @@ import { AttainmentComponent } from '../../sub-layouts/attainment/attainment.com
 import { HomeComponent } from '../../pages/home/home.component';
 import { DashboardComponent } from '../../pages/dashboard/dashboard.component';
 import { CurriculumComponent } from 'src/app/sub-layouts/curriculum/curriculum.component';
+import { UserProfileComponent } from '../../pages/user-profile/user-profile.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     CurriculumComponent,
     AttainmentComponent,
     HomeComponent,
-    DashboardComponent
+    DashboardComponent,
+    UserProfileComponent
   ],
   imports: [
     CommonModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    ReactiveFormsModule
   ]
 })
 export class AdminModule { }

@@ -40,6 +40,7 @@ export class LoginComponent implements OnInit {
       .then((value: { message: string; user: any } | any) => {
         this.loader = false;
         this.cookieService.set('user', { ...value['user'] }, { expires: 1, secure: true });
+        localStorage.setItem('user', JSON.stringify(value['user']));
         this.router.navigate(['/home'], { replaceUrl: true })
         // console.log(">>> Value: ", value);
       }, (error) => {

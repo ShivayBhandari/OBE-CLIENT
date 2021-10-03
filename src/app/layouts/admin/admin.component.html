@@ -11,7 +11,28 @@
     </div>
     <div class="col-12 col-sm-6 d-none d-sm-block">
       <div class="d-flex align-items-center justify-content-end">
-        <button class="btn btn-light mt-1" (click)="logOut()">Logout</button>
+        <div ngbDropdown>
+          <a ngbDropdownToggle class="btn btn-outline-light no-hover-effect mt-1 d-flex align-items-center">
+            <span class="material-icons">person</span>&nbsp;
+            {{ user['firstName'] | titlecase }} {{ user['lastName'] | titlecase }}
+          </a>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem class="d-flex align-items-center" routerLink="/profile">
+              <span class="material-icons mr-2">manage_accounts</span>
+              My Profile
+            </button>
+            <button ngbDropdownItem class="d-flex align-items-center" routerLink="/change-password">
+              <span class="material-icons mr-2">password</span>
+              Change Password
+            </button>
+            <div class="dropdown-divider"></div>
+            <button ngbDropdownItem class="d-flex align-items-center" (click)="logOut()">
+              <span class="material-icons mr-2">logout</span>
+              Logout
+            </button>
+          </div>
+        </div>
+        <!-- <button class="btn btn-light mt-1" (click)="logOut()">Logout</button> -->
       </div>
     </div>
   </div>
