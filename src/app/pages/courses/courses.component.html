@@ -1,1 +1,213 @@
-<p>courses works!</p>
+<div class="row w-100 m-0">
+    <div class="col px-0">
+        <div class="card border">
+            <div class="card-header bg-white">
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <h4>Courses</h4>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <button class="btn btn-primary d-flex align-items-center float-right"
+                            (click)="openCourseModal(courseModal)">
+                            <span class="material-icons mr-1">add</span>
+                            Course
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body"></div>
+        </div>
+    </div>
+</div>
+
+<ng-template let-modal #courseModal>
+    <div class="modal-header border-0">
+        <div class="row w-100 m-0">
+            <div class="col">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4>Course</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss();">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="row w-100 m-0">
+            <div class="form-group col-12 col-sm-6">
+                <label for="session" class="text-sm">Session Duration (in mins)</label>
+                <div id="session" class="input-group m-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-white">
+                            <span class="material-icons">schedule</span>
+                        </span>
+                    </div>
+                    <input type="number" name="sessionDuration" class="form-control"
+                        placeholder="Session Duration (in mins)" min="1" required>
+                </div>
+            </div>
+            <div class="form-group col-12 col-sm-6">
+                <label for="session" class="text-sm">Session Duration (in mins)</label>
+                <div id="session" class="input-group m-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-white">
+                            <span class="material-icons">schedule</span>
+                        </span>
+                    </div>
+                    <input type="number" name="sessionDuration" class="form-control"
+                        placeholder="Session Duration (in mins)" min="1" required>
+                </div>
+            </div>
+        </div>
+        <div class="row w-100 m-0">
+            <div class="form-group col-12 col-sm-6">
+                <label for="session" class="text-sm">Session Duration (in mins)</label>
+                <div id="session" class="input-group m-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-white">
+                            <span class="material-icons">schedule</span>
+                        </span>
+                    </div>
+                    <input type="number" name="sessionDuration" class="form-control"
+                        placeholder="Session Duration (in mins)" min="1" required>
+                </div>
+            </div>
+            <div class="form-group col-12 col-sm-6">
+                <label for="session" class="text-sm">Session Duration (in mins)</label>
+                <div id="session" class="input-group m-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-white">
+                            <span class="material-icons">schedule</span>
+                        </span>
+                    </div>
+                    <input type="number" name="sessionDuration" class="form-control"
+                        placeholder="Session Duration (in mins)" min="1" required>
+                </div>
+            </div>
+        </div>
+        <div class="row w-100 m-0">
+            <div class="form-group col-12 col-sm-6">
+                <label for="session" class="text-sm">Session Duration (in mins)</label>
+                <input type="number" name="sessionDuration" class="form-control"
+                    placeholder="Session Duration (in mins)" min="1" required>
+                <!-- <div id="session" class="input-group m-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-white">
+                            <span class="material-icons">schedule</span>
+                        </span>
+                    </div>
+                </div> -->
+            </div>
+            <div class="form-group col-12 col-sm-6">
+                <label for="session" class="text-sm">Session Duration (in mins)</label>
+                <div id="session" class="input-group m-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-white">
+                            <span class="material-icons">schedule</span>
+                        </span>
+                    </div>
+                    <input type="number" name="sessionDuration" class="form-control"
+                        placeholder="Session Duration (in mins)" min="1" required>
+                </div>
+            </div>
+        </div>
+        <div class="row w-100 m-0">
+            <div class="form-group col-12 col-sm-6">
+                <label for="session" class="text-sm">Session Duration (in mins)</label>
+                <div id="session" class="input-group m-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-white">
+                            <span class="material-icons">schedule</span>
+                        </span>
+                    </div>
+                    <input type="number" name="sessionDuration" class="form-control"
+                        placeholder="Session Duration (in mins)" min="1" required>
+                </div>
+            </div>
+            <div class="form-group col-12 col-sm-6">
+                <label for="session" class="text-sm">Session Duration (in mins)</label>
+                <div id="session" class="input-group m-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-white">
+                            <span class="material-icons">schedule</span>
+                        </span>
+                    </div>
+                    <input type="number" name="sessionDuration" class="form-control"
+                        placeholder="Session Duration (in mins)" min="1" required>
+                </div>
+            </div>
+        </div>
+        <div class="row w-100 m-0">
+            <div class="form-group col-12 col-sm-6">
+                <label for="session" class="text-sm">Session Duration (in mins)</label>
+                <div id="session" class="input-group m-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-white">
+                            <span class="material-icons">schedule</span>
+                        </span>
+                    </div>
+                    <input type="number" name="sessionDuration" class="form-control"
+                        placeholder="Session Duration (in mins)" min="1" required>
+                </div>
+            </div>
+            <div class="form-group col-12 col-sm-6">
+                <label for="session" class="text-sm">Session Duration (in mins)</label>
+                <div id="session" class="input-group m-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-white">
+                            <span class="material-icons">schedule</span>
+                        </span>
+                    </div>
+                    <input type="number" name="sessionDuration" class="form-control"
+                        placeholder="Session Duration (in mins)" min="1" required>
+                </div>
+            </div>
+        </div>
+        <div class="row w-100 m-0">
+            <div class="form-group col-12 col-sm-6">
+                <label for="session" class="text-sm">Session Duration (in mins)</label>
+                <div id="session" class="input-group m-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-white">
+                            <span class="material-icons">schedule</span>
+                        </span>
+                    </div>
+                    <input type="number" name="sessionDuration" class="form-control"
+                        placeholder="Session Duration (in mins)" min="1" required>
+                </div>
+            </div>
+            <div class="form-group col-12 col-sm-6">
+                <label for="session" class="text-sm">Session Duration (in mins)</label>
+                <div id="session" class="input-group m-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-white">
+                            <span class="material-icons">schedule</span>
+                        </span>
+                    </div>
+                    <input type="number" name="sessionDuration" class="form-control"
+                        placeholder="Session Duration (in mins)" min="1" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="row w-100">
+            <div class="col">
+                <div class="d-flex justify-content-end align-items-center">
+                    <button type="button" class="btn btn-dark btn-sm mr-1"
+                        (click)="modal.dismiss('Cross Btn Clicked');">
+                        Close
+                    </button>
+                    <button type="submit" class="btn btn-dark btn-sm" [disabled]="loader">
+                        Submit
+                        <span *ngIf="loader">&nbsp;</span>
+                        <div *ngIf="loader" class="spinner-border spinner-border-sm text-white" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-courses',
@@ -7,9 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CoursesComponent implements OnInit {
 
-  constructor() { }
+  loader: boolean = false;
+
+  constructor(
+    private modalService: NgbModal
+  ) { }
 
   ngOnInit(): void {
   }
 
+  openCourseModal(modalRef: any): void {
+    this.modalService.open(modalRef, {
+      size: 'lg'
+    });
+  }
 }
