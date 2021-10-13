@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { User } from 'src/app/models/user';
 import { environment } from 'src/environments/environment';
+import { ROLES, TITLES, DEPARTMENTS } from './../../models/constants';
 
 @Component({
   selector: 'app-user-profile',
@@ -22,12 +23,20 @@ export class UserProfileComponent implements OnInit {
 
   profileBool: boolean = true;
 
+  userSignatures: any = [];
+  userDesignations: any = [];
+  userDepartments: any = [];
+
   constructor(
     private fb: FormBuilder,
     private httpClient: HttpClient,
     private toast: ToastrService,
     private route: Router
   ) {
+    this.userSignatures = TITLES;
+    this.userDesignations = ROLES;
+    this.userDepartments = DEPARTMENTS;
+
     this.user = JSON.parse(localStorage.getItem('user') || "") as User;
     if(this.route.url.replace("/", "").split("/")[0] === "change-password") {
       this.profileBool = false;

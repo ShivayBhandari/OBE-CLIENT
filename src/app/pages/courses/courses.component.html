@@ -36,42 +36,28 @@
     <div class="modal-body">
         <div class="row w-100 m-0">
             <div class="form-group col-12 col-sm-6">
-                <label for="session" class="text-sm">Curriculum</label>
-                <div id="session" class="input-group m-0">
-                    <div class="input-group-prepend ">
-                        <span class="input-group-text bg-white">
-                            <span class="material-icons">schedule</span>
-                        </span>
-                    </div>
-                    <input type="number" name="sessionDuration" class="form-control "
-                        placeholder="Session Duration (in mins)" min="1" required>
-                </div>
+                <label for="curriculum" class="text-sm">Curriculum</label>
+                <select name="curriculum" id="curriculum" class="custom-select">
+                    <option value="">Hello1</option>
+                    <option value="">Hello2</option>
+                    <option value="">Hello3</option>
+                    <option value="">Hello4</option>
+                    <option value="">Hello5</option>
+                </select>
+                <!-- <input type="number" name="curriculum" id="curriculum" class="form-control"
+                    placeholder="Curriculum Name" required> -->
             </div>
             <div class="form-group col-12 col-sm-6">
-                <label for="session" class="text-sm">Course Domain:</label>
-                <div id="session" class="input-group m-0">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text bg-white">
-                            <span class="material-icons">schedule</span>
-                        </span>
-                    </div>
-                    <input type="number" name="sessionDuration" class="form-control"
-                        placeholder="Session Duration (in mins)" min="1" required>
-                </div>
+                <label for="courseDomain" class="text-sm">Course Domain:</label>
+                <input type="number" name="courseDomain" class="form-control"
+                    placeholder="Domain" min="1" required>
             </div>
         </div>
         <div class="row w-100 m-0">
             <div class="form-group col-12 col-sm-6">
                 <label for="session" class="text-sm">Term(Semester)</label>
-                <div id="session" class="input-group m-0">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text bg-white">
-                            <span class="material-icons">schedule</span>
-                        </span>
-                    </div>
-                    <input type="number" name="sessionDuration" class="form-control"
-                        placeholder="Session Duration (in mins)" min="1" required>
-                </div>
+                <input type="number" name="sessionDuration" class="form-control"
+                    placeholder="Session Duration (in mins)" min="1" required>
             </div>
             <div class="form-group col-12 col-sm-6">
                 <label for="session" class="text-sm">Prerequisite Courses</label>
