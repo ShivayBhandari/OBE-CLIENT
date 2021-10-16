@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CurriculumRoutingModule } from './curriculum-routing.module';
 import { CoursesComponent } from '../../pages/courses/courses.component';
 import { CoMappingComponent } from '../../pages/co-mapping/co-mapping.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -13,7 +14,9 @@ import { CoMappingComponent } from '../../pages/co-mapping/co-mapping.component'
   ],
   imports: [
     CommonModule,
-    CurriculumRoutingModule
+    CurriculumRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class CurriculumModule { }

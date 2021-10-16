@@ -24,3 +24,9 @@ export const TITLES = [
     "Miss.",
     "Prof."
 ];
+
+export const COURSE_TYPE = [
+    "Theory",
+    "Theory with Lab",
+    "Lab / Projects / Others"
+];

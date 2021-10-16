@@ -7,7 +7,8 @@ import { HomeComponent } from '../../pages/home/home.component';
 import { DashboardComponent } from '../../pages/dashboard/dashboard.component';
 import { CurriculumComponent } from 'src/app/sub-layouts/curriculum/curriculum.component';
 import { UserProfileComponent } from '../../pages/user-profile/user-profile.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,9 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     AdminRoutingModule,
-    ReactiveFormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    NgbModule
   ]
 })
 export class AdminModule { }

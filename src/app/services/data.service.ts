@@ -1,0 +1,40 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Curriculum } from '../models/curriculum';
+import { Term } from '../models/term';
+import { User } from '../models/user';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+
+  userModel: User | undefined;
+
+  curriculumsSub = new BehaviorSubject<Curriculum[]>([]);
+  curriculumRetrieved: boolean = false;
+
+  termsSub = new BehaviorSubject<Term[]>([]);
+
+  constructor(
+    private httpClient: HttpClient
+  ) { 
+    this.userModel = JSON.parse(localStorage.getItem('user') || "");
+  }
+
+  getCurriculums(): void {
+    if(!this.curriculumRetrieved) {
+      this.httpClient.get<{ curriculums: any[] }>(`${environment.serverUrl}/curriculums`)
+      .toPromise()
+      .then(res => {
+        this.curriculumsSub.next(res?.curriculums.filter(e => e.deptName === this.userModel?.department).map(e => e as Curriculum));
+        this.curriculumRetrieved = true;
+      }, err => {
+        console.log(">>> error: ", err);
+        
+      });
+    }
+  }
+}

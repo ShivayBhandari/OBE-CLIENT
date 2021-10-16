@@ -10,6 +10,7 @@ import { AdminComponent } from './layouts/admin/admin.component';
 import { AuthComponent } from './layouts/auth/auth.component';
 import { CookieService } from 'ngx-cookie-service';
 import { ToastrModule } from 'ngx-toastr';
+import { DataService } from './services/data.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ToastrModule } from 'ngx-toastr';
     })
   ],
   providers: [
-    CookieService
+    CookieService,
+    DataService
   ],
   bootstrap: [AppComponent]
 })
