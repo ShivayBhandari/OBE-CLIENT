@@ -1,4 +1,5 @@
 export class Course {
+    _id: string | undefined;
     curriculumId: any;
     curriculumName: any;
     termId: any;

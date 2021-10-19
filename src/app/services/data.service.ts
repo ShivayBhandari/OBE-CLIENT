@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Course } from '../models/course';
 import { Curriculum } from '../models/curriculum';
 import { Term } from '../models/term';
 import { User } from '../models/user';
@@ -11,12 +12,16 @@ import { User } from '../models/user';
 })
 export class DataService {
 
-  userModel: User | undefined;
+  userModel: User;
 
   curriculumsSub = new BehaviorSubject<Curriculum[]>([]);
   curriculumRetrieved: boolean = false;
 
+  coursessSub = new BehaviorSubject<Course[]>([]);
+  coursesRetrieved: boolean = false;
+
   termsSub = new BehaviorSubject<Term[]>([]);
+  termsRetrieved: boolean = false;
 
   constructor(
     private httpClient: HttpClient
@@ -37,4 +42,18 @@ export class DataService {
       });
     }
   }
+
+  getCourses(): void {
+    if(!this.coursesRetrieved) {
+      this.httpClient.get<{ courses: Course[] }>(`${environment.serverUrl}/courses`)
+      .toPromise()
+      .then((res) => {
+        this.coursessSub.next(res?.courses.filter(x => x.courseOwnerId === this.userModel._id));    
+        this.coursesRetrieved = true;
+      }, (err) => {
+        console.log(">>> error: ", err);
+        
+      })
+    }
+  } 
 }

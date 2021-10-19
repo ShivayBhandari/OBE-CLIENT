@@ -1,0 +1,95 @@
+<div class="row w-100 m-0">
+  <div class="col px-0">
+    <div class="card border">
+      <div class="card-header bg-white">
+        <div class="row">
+          <div class="col-12 col-sm-6">
+            <div class="d-flex flex-column">
+              <h4 class="m-0">{{ courseModel?.courseTitle | titlecase }}</h4>
+              <h6 class="text-muted text-sm m-0 mt-1">Course Outcome</h6>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6">
+            <button class="btn btn-primary d-flex align-items-center float-right" (click)="openCourseOutcomeModal(courseOutcomeModal)">
+              <span class="material-icons mr-1">add</span>
+              Course Outcome
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th>CO Code</th>
+              <th>CO Statement</th>
+              <th>Bloom Levels</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template let-modal #courseOutcomeModal>
+  <div class="modal-header border-0">
+    <div class="row w-100 m-0">
+      <div class="col">
+        <div class="d-flex justify-content-between align-items-center">
+          <h4>Course {{ updation ? "Updation" : "Creation" }}</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss();">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="courseOutcomeForm" (ngSubmit)="submitForm(courseOutcomeForm)">
+    <div class="modal-body">
+      <div class="form-group col-12">
+        <label class="text-sm">Course Outcome Code</label>
+        <input type="text" name="coCode" formControlName="coCode" class="form-control">
+      </div>
+      <div class="form-group col-12">
+        <label class="text-sm">Course Outcome Statement</label>
+        <textarea type="text" name="coCodeStatement" formControlName="coCodeStatement" rows="4" class="form-control"></textarea>
+      </div>
+      <div class="form-group col-12 d-flex flex-column">
+        <label class="text-sm text-muted">Bloom Levels</label>
+        <div class="btn-group btn-group-toggle" ngbRadioGroup>
+          <label ngbButtonLabel class="btn-primary btn-sm" *ngFor="let key of bloomLevelKeys; index as idx">
+            <input ngbButton type="checkbox" [value]="key">{{ key }}
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row w-100">
+        <div class="col">
+          <div class="d-flex justify-content-end align-items-center">
+            <button type="button" class="btn btn-dark btn-sm mr-1" (click)="modal.dismiss('Cross Btn Clicked');">
+              Close
+            </button>
+            <button type="submit" class="btn btn-dark btn-sm" [disabled]="loader">
+              Submit
+              <span *ngIf="loader">&nbsp;</span>
+              <div *ngIf="loader" class="spinner-border spinner-border-sm text-white" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>

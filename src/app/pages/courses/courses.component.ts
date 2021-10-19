@@ -1,6 +1,8 @@
+import { DatePipe } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -21,10 +23,12 @@ export class CoursesComponent implements OnInit {
 
   courseForm: FormGroup | undefined;
   loader: boolean = false;
+  updation: boolean = false;
 
   curriculums: Curriculum[] = [];
   curriculumSub: Subscription | undefined;
   courses: Course[] = [];
+  coursesSub: Subscription | undefined;
 
   terms: Term[] = [];
   
@@ -38,64 +42,104 @@ export class CoursesComponent implements OnInit {
     private modalService: NgbModal,
     private data: DataService,
     private httpClient: HttpClient,
-    private toast: ToastrService
+    private toast: ToastrService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.courseType = COURSE_TYPE;
     this.departments = DEPARTMENTS;
-
-    this.httpClient.get<{ courses: Course[] }>(`${environment.serverUrl}/courses`)
-      .toPromise()
-      .then((value) => {
-        this.courses = value?.courses.filter(x => x.courseOwnerId === this.userModel._id);        
-      }, (err) => {
-        console.log(">>> error: ", err);
-        
-      })
+    this.getCourses();    
   }
 
-  initialiseForm(){
-    this.courseForm = this.fb.group({
-      curriculum: [null],
-      term: [null],
-      courseDomain: [null],
-      typeOfCourse: [null], //Theory, Theory with Lab, Lab/Project Works/Others
-      courseCode: [null],
-      courseTitle: [null],
-      courseAcronym: [null],
-      theoryCredits: [null],
-      tutorialCredits: [null],
-      practicalCredits: [null],
-      totalCredits: [null],
-      totalCiaWeightage: [null],
-      totalTeeWeightage: [null],
-      totalWeightage: [null],
-      ciaPassingMarks: [null],
-      prerequisiteCourses: [null],
-      courseOwner: [this.userModel.firstName + " " + this.userModel.lastName],
-      courseOwnerId: [this.userModel._id],
-      reviewerDepartment: [this.userModel.department],
-      courseReviewer: [null],
-      lastDateToReview: [null],
-      totalCourseConatactHours: [null],
-      totalCiaMarks: [null],
-      totalMidTermMarks: [null],
-      totalTeeMarks: [null],
-      totalAttendanceMarks: [null],
-      totalMarks: [null],
-      teeDuration: [null],
-      blommsDomain: [null],
-      state: [true]
-    });
+  getCourses() {
+    this.data.getCourses();
+    this.coursesSub = this.data.coursessSub.subscribe(res => {
+      if(res.length != 0) {
+        this.courses = res;
+      }
+    })
   }
 
-  openCourseModal(modalRef: any) {
+  initialiseForm(courseObj: Course | any = null){
+    if(courseObj === null) {
+      this.updation = false;
+      this.courseForm = this.fb.group({
+        curriculum: [null],
+        term: [null],
+        courseDomain: [null],
+        typeOfCourse: [null], //Theory, Theory with Lab, Lab/Project Works/Others
+        courseCode: [null],
+        courseTitle: [null],
+        courseAcronym: [null],
+        theoryCredits: [null],
+        tutorialCredits: [null],
+        practicalCredits: [null],
+        totalCredits: [null],
+        totalCiaWeightage: [null],
+        totalTeeWeightage: [null],
+        totalWeightage: [null],
+        ciaPassingMarks: [null],
+        prerequisiteCourses: [null],
+        courseOwner: [this.userModel.firstName + " " + this.userModel.lastName],
+        courseOwnerId: [this.userModel._id],
+        reviewerDepartment: [this.userModel.department],
+        courseReviewer: [null],
+        lastDateToReview: [null],
+        totalCourseConatactHours: [null],
+        totalCiaMarks: [null],
+        totalMidTermMarks: [null],
+        totalTeeMarks: [null],
+        totalAttendanceMarks: [null],
+        totalMarks: [null],
+        teeDuration: [null],
+        blommsDomain: [null],
+        state: [true]
+      });
+    } else {
+      this.updation = true;
+      this.courseForm = this.fb.group({
+        curriculum: [null],
+        term: [null],
+        courseDomain: [courseObj.courseDomain],
+        typeOfCourse: [courseObj.typeOfCourse], //Theory, Theory with Lab, Lab/Project Works/Others
+        courseCode: [courseObj.courseCode],
+        courseTitle: [courseObj.courseTitle],
+        courseAcronym: [courseObj.courseAcronym],
+        theoryCredits: [courseObj.theoryCredits],
+        tutorialCredits: [courseObj.tutorialCredits],
+        practicalCredits: [courseObj.practicalCredits],
+        totalCredits: [courseObj.totalCredits],
+        totalCiaWeightage: [courseObj.totalCiaWeightage],
+        totalTeeWeightage: [courseObj.totalTeeWeightage],
+        totalWeightage: [courseObj.totalWeightage],
+        ciaPassingMarks: [courseObj.ciaPassingMarks],
+        prerequisiteCourses: [courseObj.prerequisiteCourses],
+        courseOwner: [this.userModel.firstName + " " + this.userModel.lastName],
+        courseOwnerId: [this.userModel._id],
+        reviewerDepartment: [this.userModel.department],
+        courseReviewer: [courseObj.courseReviewer],
+        lastDateToReview: [new DatePipe('en-US').transform(courseObj.lastDateToReview, 'yyyy-MM-dd')],
+        totalCourseConatactHours: [courseObj.totalCourseConatactHours],
+        totalCiaMarks: [courseObj.totalCiaMarks],
+        totalMidTermMarks: [courseObj.totalMidTermMarks],
+        totalTeeMarks: [courseObj.totalTeeMarks],
+        totalAttendanceMarks: [courseObj.totalAttendanceMarks],
+        totalMarks: [courseObj.totalMarks],
+        teeDuration: [courseObj.teeDuration],
+        blommsDomain: [courseObj.blommsDomain],
+        state: [courseObj.state]
+      });
+    }
+  }
+
+  openCourseModal(modalRef: any, course: Course | any = null) {
     this.data.getCurriculums();
     this.data.curriculumsSub.subscribe(list => {
       if(list.length != 0) {
         this.curriculums = list;        
-        this.initialiseForm();
+        this.initialiseForm(course);
         this.modalService.open(modalRef, {
           size: 'lg',
           keyboard: false,
@@ -106,6 +150,7 @@ export class CoursesComponent implements OnInit {
   }
 
   submitForm(form: FormGroup) {
+    this.loader = true;
     let values = { ...form.value };
     let courseObj: Course | any = { ...form.value };    
     
@@ -116,15 +161,17 @@ export class CoursesComponent implements OnInit {
     courseObj.termId = values.term['_id'];
     courseObj.termName = values.term['termName'];
     courseObj.termNo = values.term['termNo'];
-
+    
     this.httpClient.post(`${environment.serverUrl}/courses/add-course`, { ...courseObj })
     .toPromise()
     .then((value) => {
       // console.log(":>>> Value: ", value);
+      this.loader = false;
       this.modalService.dismissAll();
       this.toast.success("Course Added Successfully")
     }, (err) => {
       // console.log(">>> err: ", err);
+      this.loader = false;
       this.toast.error(err.error.message);
     });
   }
@@ -135,5 +182,9 @@ export class CoursesComponent implements OnInit {
 
   compareCurriculumsById(c1: Curriculum, c2: Curriculum) {
     return c1 && c2 && c1._id === c2._id;
+  }
+
+  navigateCourseOutcome(courseId: any) {
+    this.router.navigate([courseId, 'course-outcomes'], { relativeTo: this.route });
   }
 }
