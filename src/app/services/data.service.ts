@@ -13,6 +13,9 @@ import { User } from '../models/user';
 export class DataService {
 
   userModel: User;
+  httpHeaders: HttpHeaders = new HttpHeaders({
+    'Cache-Control': 'no-cache'
+  });
 
   curriculumsSub = new BehaviorSubject<Curriculum[]>([]);
   curriculumRetrieved: boolean = false;
@@ -31,7 +34,9 @@ export class DataService {
 
   getCurriculums(): void {
     if(!this.curriculumRetrieved) {
-      this.httpClient.get<{ curriculums: any[] }>(`${environment.serverUrl}/curriculums`)
+      this.httpClient.get<{ curriculums: any[] }>(`${environment.serverUrl}/curriculums`, {
+        headers: this.httpHeaders
+      })
       .toPromise()
       .then(res => {
         this.curriculumsSub.next(res?.curriculums.filter(e => e.deptName === this.userModel?.department).map(e => e as Curriculum));
@@ -45,7 +50,9 @@ export class DataService {
 
   getCourses(): void {
     if(!this.coursesRetrieved) {
-      this.httpClient.get<{ courses: Course[] }>(`${environment.serverUrl}/courses`)
+      this.httpClient.get<{ courses: Course[] }>(`${environment.serverUrl}/courses`, {
+        headers: this.httpHeaders
+      })
       .toPromise()
       .then((res) => {
         this.coursessSub.next(res?.courses.filter(x => x.courseOwnerId === this.userModel._id));    
