@@ -99,9 +99,14 @@ export class CoursesComponent implements OnInit {
       });
     } else {
       this.updation = true;
+      let currObj = this.curriculums.find(x => x._id === courseObj.curriculumId);
+      this.terms = currObj?.terms || [];
+      let termObj = this.terms.find(x => x._id === courseObj.termId);
+      
       this.courseForm = this.fb.group({
-        curriculum: [null],
-        term: [null],
+        _id: [courseObj._id],
+        curriculum: [currObj],
+        term: [termObj],
         courseDomain: [courseObj.courseDomain],
         typeOfCourse: [courseObj.typeOfCourse], //Theory, Theory with Lab, Lab/Project Works/Others
         courseCode: [courseObj.courseCode],
@@ -131,6 +136,7 @@ export class CoursesComponent implements OnInit {
         blommsDomain: [courseObj.blommsDomain],
         state: [courseObj.state]
       });
+      
     }
   }
 
@@ -162,18 +168,56 @@ export class CoursesComponent implements OnInit {
     courseObj.termName = values.term['termName'];
     courseObj.termNo = values.term['termNo'];
     
-    this.httpClient.post(`${environment.serverUrl}/courses/add-course`, { ...courseObj })
-    .toPromise()
-    .then((value) => {
-      // console.log(":>>> Value: ", value);
-      this.loader = false;
-      this.modalService.dismissAll();
-      this.toast.success("Course Added Successfully")
+    if(!this.updation) {
+      this.httpClient.post<{ response: Course, error: any }>(`${environment.serverUrl}/courses/add-course`, { ...courseObj })
+        .toPromise()
+        .then((value) => {
+          // console.log(":>>> Value: ", value);
+          this.loader = false;
+          this.modalService.dismissAll();
+          this.toast.success("Course Added Successfully")
+
+          this.courses.push({ ...value.response });
+        }, (err) => {
+          // console.log(">>> err: ", err);
+          this.loader = false;
+          this.toast.error(err.error.message);
+        });
+    } else {
+      this.httpClient.put<{ response: Course }>(`${environment.serverUrl}/courses/update-course/${courseObj._id}`, { ...courseObj })
+        .toPromise()
+        .then((value) => {
+          // console.log(":>>> Value: ", value);
+          this.loader = false;
+          this.modalService.dismissAll();
+          this.toast.success("Course Updated Successfully")
+
+          let idx = this.courses.findIndex(x => x._id === courseObj._id);
+          this.courses[idx] = { ...value.response };
+        }, (err) => {
+          // console.log(">>> err: ", err);
+          this.loader = false;
+          this.toast.error(err.error.message);
+        });
+    }
+  }
+
+  deleteCourse(modalRef: any, id: any) {
+    this.modalService.open(modalRef).result.then((value) => {
+      this.httpClient.delete(`${environment.serverUrl}/courses/delete-course/${id}`)
+      .toPromise()
+      .then((value) => {
+        this.toast.success("Course Deleted Successfully");
+        let idx = this.courses.findIndex(x => x._id === id);
+        this.courses.splice(idx, 1);
+      }, (err) => {
+        // console.log(">>> error", err);
+      });
+      
     }, (err) => {
-      // console.log(">>> err: ", err);
-      this.loader = false;
-      this.toast.error(err.error.message);
-    });
+      console.log(">>> error: ", err);
+      
+    })
   }
 
   curriculumTerms() {

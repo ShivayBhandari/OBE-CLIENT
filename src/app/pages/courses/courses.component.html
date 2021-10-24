@@ -54,7 +54,7 @@
                   (click)="openCourseModal(courseModal, course)">
                   Update
                 </button>
-                <button type="button" class="btn btn-danger btn-sm mr-1 mb-1">Delete</button>
+                <button type="button" class="btn btn-danger btn-sm mr-1 mb-1" (click)="deleteCourse(deleteModal, course._id)">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -236,4 +236,23 @@
       </div>
     </div>
   </form>
+</ng-template>
+
+<ng-template #deleteModal let-modal>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h6 class="m-0">Are you sure want to delete this course?</h6>
+    <button type="button" class="close" aria-label="Close" id="closeModal" #closeModal
+      (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-dark float-right mr-2"
+      (click)="modal.dismiss('Cross click')">
+      NO
+    </button>
+    <button type="submit" class="btn btn-sm btn-danger float-right mr-2" (click)="modal.close('1')">
+      YES
+    </button>
+  </div>
 </ng-template>

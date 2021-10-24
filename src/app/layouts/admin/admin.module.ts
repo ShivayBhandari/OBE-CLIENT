@@ -9,6 +9,8 @@ import { CurriculumComponent } from 'src/app/sub-layouts/curriculum/curriculum.c
 import { UserProfileComponent } from '../../pages/user-profile/user-profile.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UsersComponent } from '../../pages/users/users.component';
+import { AssessmentsComponent } from '../../pages/assessments/assessments.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AttainmentComponent,
     HomeComponent,
     DashboardComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    UsersComponent,
+    AssessmentsComponent
   ],
   imports: [
     CommonModule,

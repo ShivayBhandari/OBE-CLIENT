@@ -64,3 +64,7 @@ export class DataService {
     }
   } 
 }
+
+/**
+ * batchId, termId => courses fetch OBE Server Route
+ */

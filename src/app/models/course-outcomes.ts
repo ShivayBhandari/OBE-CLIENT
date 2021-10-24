@@ -8,6 +8,7 @@ export class CourseOutcomes {
   courseTitle: string | undefined;
   courseId: string | undefined;
   coCode: string | undefined;
+  coType: number | undefined;
   coCodeStatement: string | undefined;
   deliveryMethod: string | undefined;
   cognitiveDomain: string[] | undefined;

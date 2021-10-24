@@ -31,6 +31,12 @@ export class CourseOutcomeComponent implements OnInit, OnDestroy {
   updation: boolean = false;
 
   courseOutcomeList: CourseOutcomes[] = [];
+  tempCourseOutcomeList: CourseOutcomes[] = [];
+  selectedCOType: number = 0;
+  coTypes: { name: string; value: number; }[] = [
+    { name: "Theory", value: 0 },
+    { name: "Laboratory", value: 1 }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -61,12 +67,17 @@ export class CourseOutcomeComponent implements OnInit, OnDestroy {
     })
     .toPromise()
     .then((value) => {
-      this.courseOutcomeList = [...value.coursesCO];
+      this.courseOutcomeList = [ ...value.coursesCO ];
+      this.tempCourseOutcomeList = [ ...value.coursesCO ];
+      this.filterListByCOType();
     }, (error) => {
-      console.log(">>> Error: ", error);
-      
+      // console.log(">>> Error: ", error);      
     })
+  }
 
+  filterListByCOType(coType: number = 0) {
+    this.selectedCOType = coType;
+    this.courseOutcomeList = this.tempCourseOutcomeList.filter(x => x.coType === coType);
   }
 
   initialisedForm(coObj: CourseOutcomes | undefined): void {
@@ -81,6 +92,7 @@ export class CourseOutcomeComponent implements OnInit, OnDestroy {
       courseTitle: [this.courseModel?.courseTitle],
       courseId: [this.courseModel?._id],
       coCode: [coObj?.coCode || null, Validators.required],
+      coType: [ coObj?.coType || this.selectedCOType ],
       coCodeStatement: [coObj?.coCodeStatement || null, Validators.required],
       deliveryMethod: [coObj?.deliveryMethod || null, Validators.required],
       cognitiveDomain: this.fb.array(coObj?.cognitiveDomain?.map(e => this.fb.control(e)) || [], [Validators.required, Validators.minLength(1)])
@@ -98,12 +110,13 @@ export class CourseOutcomeComponent implements OnInit, OnDestroy {
     if(arrayValue.includes(value)) {
       let idx = arrayValue.findIndex(x => x === value);
       this.getControl().removeAt(idx);      
+      this.change.detectChanges();
     } else {
       this.getControl().push(this.fb.control(value));      
+      this.change.detectChanges();
     }
-    this.change.detectChanges();
   }
-
+  
   getCheckedValue(value: string) {
     let arrayValue: string[] = [...this.getControl().value];          
     return arrayValue.includes(value);
@@ -141,8 +154,8 @@ export class CourseOutcomeComponent implements OnInit, OnDestroy {
   submitUpdateCOForm(form: FormGroup) {
     this.loader = true;
     let values: CourseOutcomes = { ...form.value };
-    values.cognitiveDomain = values.cognitiveDomain?.sort(); 
-    this.httpClient.put(`${environment.serverUrl}/course-outcomes/update-co/${form.value._id}`, { ...values })
+    values.cognitiveDomain = values.cognitiveDomain?.sort();
+    this.httpClient.put<{ response: CourseOutcomes }>(`${environment.serverUrl}/course-outcomes/update-co/${form.value._id}`, { ...values })
     .toPromise()
     .then((value) => {
       // console.log(":>>> Value: ", value);
@@ -150,7 +163,7 @@ export class CourseOutcomeComponent implements OnInit, OnDestroy {
       this.modalService.dismissAll();
       this.toast.success("Course Outcome Updated Successfully");
       let idx = this.courseOutcomeList.findIndex(x => x._id === form.value._id);
-      this.courseOutcomeList[idx] = { ...values };
+      this.courseOutcomeList[idx] = { ...value.response };
     }, (err) => {
       console.log(">>> err: ", err);
       this.loader = false;
@@ -158,17 +171,22 @@ export class CourseOutcomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteCO(id: any) {
-    this.httpClient.delete(`${environment.serverUrl}/course-outcomes/delete-co/${id}`)
-    .toPromise()
-    .then((value) => {
-      this.toast.success("Course Outcome Deleted");
-      let idx = this.courseOutcomeList.findIndex(x => x._id === id);
-      this.courseOutcomeList.splice(idx, 1);
-    }, (err) => {
-      console.log(">>> error", err);
+  deleteCO(modalRef: any, id: any) {
+    this.modalService.open(modalRef).result.then((value) => {
+      this.httpClient.delete(`${environment.serverUrl}/course-outcomes/delete-co/${id}`)
+      .toPromise()
+      .then((value) => {
+        this.toast.success("Course Outcome Deleted");
+        let idx = this.courseOutcomeList.findIndex(x => x._id === id);
+        this.courseOutcomeList.splice(idx, 1);
+      }, (err) => {
+        // console.log(">>> error", err);
+      });
       
-    });
+    }, (err) => {
+      console.log(">>> error: ", err);
+      
+    })
   }
 
   ngOnDestroy() {

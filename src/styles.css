@@ -3,3 +3,10 @@
 html, body {
   height: 100%;
 }
+
+.sticky {
+  position: sticky;
+  position: -webkit-sticky;
+  left: 0;
+  top: 8.35rem;
+}

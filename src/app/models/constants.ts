@@ -31,6 +31,12 @@ export const COURSE_TYPE = [
     "Lab / Projects / Others"
 ];
 
+export const ASSESSMENT_TYPE = [
+    "Assignment",
+    "MST",
+    "Quiz"
+];
+
 export const DELIVERY_METHODS = [
     "Brainstorming",
     "Case Study",
@@ -43,7 +49,7 @@ export const DELIVERY_METHODS = [
 ];
 
 export const BLOOM_LEVELS = {
-    L1: "L1-Remembering-(List, Identify, Outline, Define)",
+    L1: "L1-Remembering : (List, Identify, Outline, Define)",
     L2: "L2-Understanding : (Explain, Describe, Interpret, Distinguish)",
     L3: "L3-Applying : (Apply, Calculate, Solve)",
     L4: "L4-Analyzing : (Calculate, Analyze, Compare, Classify, Derive)",

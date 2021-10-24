@@ -12,8 +12,9 @@ export interface RouteInfo {
 
 export const ROUTES: RouteInfo[] = [
   { path: '/home', title: 'Home', icon: 'home', class: '', children: [] },
-  { path: '/dashboard', title: 'Dashboard', icon: 'dashboard', class: '', children: [] },
+  { path: '/faculty', title: 'Faculty', icon: 'group', class: '', children: [] },
   { path: '/curriculum', title: 'Curriculum', icon: 'library_books', class: '', children: [] },
+  { path: '/assessments', title: 'Assessment', icon: 'assessment', class: '', children: [] },
   { path: '/attainment', title: 'Attainment', icon: 'track_changes', class: '', children: [] },
 ];
 
