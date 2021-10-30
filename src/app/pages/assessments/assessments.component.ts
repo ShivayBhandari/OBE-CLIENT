@@ -19,13 +19,6 @@ import { environment } from 'src/environments/environment';
 })
 export class AssessmentsComponent implements OnInit {
 
-  curriculums: Curriculum[] | undefined = [];
-  terms: Term[] | undefined = [];
-  courses: Course[] = [];
-  tempCourses: Course[] = [];
-
-  selectedCurriculum: Curriculum | null = null;
-  selectedTerm: Term | null = null;
   selectedCourse: Course | null = null;
 
   fetching: boolean = false;
@@ -48,24 +41,6 @@ export class AssessmentsComponent implements OnInit {
 
   async ngOnInit() {
     this.assessmentTypes = ASSESSMENT_TYPE;
-
-    this.dataService.getCourses();
-    this.dataService.getCurriculums();
-    this.listSub = await combineLatest([this.dataService.curriculumsSub, this.dataService.coursessSub])
-      .subscribe(([curriculums, courses]) => {
-        if (curriculums.length !== 0) this.curriculums = curriculums;
-        if (courses.length !== 0) this.tempCourses = courses;
-      });
-  }
-
-  curriculumSelection(value: Curriculum) {
-    this.selectedCurriculum = value;
-    this.terms = value?.terms || [];
-  }
-
-  termselection(value: Term) {
-    this.selectedTerm = value;
-    this.courses = this.tempCourses.filter(x => x.curriculumId === this.selectedCurriculum?._id && x.termId === value._id) || [];
   }
 
   courseSelection(value: Course) {

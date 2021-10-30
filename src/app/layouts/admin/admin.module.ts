@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UsersComponent } from '../../pages/users/users.component';
 import { AssessmentsComponent } from '../../pages/assessments/assessments.component';
+import { FiltersComponent } from '../../components/filters/filters.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { AssessmentsComponent } from '../../pages/assessments/assessments.compon
     DashboardComponent,
     UserProfileComponent,
     UsersComponent,
-    AssessmentsComponent
+    AssessmentsComponent,
+    FiltersComponent
   ],
   imports: [
     CommonModule,
