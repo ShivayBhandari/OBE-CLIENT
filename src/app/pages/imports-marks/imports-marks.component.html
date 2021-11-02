@@ -1,0 +1,86 @@
+<!-- <app-filters></app-filters> -->
+<div class="row w-100 m-0">
+  <div class="col px-0">
+    <div class="card border">
+      <div class="card-header bg-white">
+        <div class="row">
+          <div class="col-12 col-sm-8">
+            <div class="d-flex flex-column">
+              <h4 class="m-0">Marks Imports</h4>
+              <div class="row w-100 m-0 mt-2">
+                <div class="form-group col-3 px-0 m-0 mr-2">
+                  <select name="curriculums" id="curriculums" class="custom-select" [ngModel]="selectedCurriculum"
+                    (ngModelChange)="curriculumSelection($event)">
+                    <option [ngValue]="null">Select Curriculums</option>
+                    <option *ngFor="let curr of curriculums; index as idx" [ngValue]="curr">
+                      {{ curr.curriculumName }}
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group col-3 px-0 m-0 mr-2">
+                  <select name="terms" id="terms" class="custom-select" [disabled]="terms?.length === 0"
+                    [ngModel]="selectedTerm" (ngModelChange)="termselection($event)">
+                    <option [ngValue]="null">Select terms</option>
+                    <option *ngFor="let term of terms; index as idx" [ngValue]="term">
+                      {{ term.termName }}
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group col-3 px-0 m-0 mr-2">
+                  <select name="course" id="course" class="custom-select"
+                    [disabled]="selectedTerm === null || courses?.length === 0" [ngModel]="selectedCourse"
+                    (ngModelChange)="courseSelection($event)">
+                    <option [ngValue]="null">Select Course</option>
+                    <option *ngFor="let course of courses; index as idx" [ngValue]="course">
+                      {{ course.courseTitle }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body" *ngIf="assessments?.length === 0">
+        <div class="d-flex flex-column justify-content-center align-items-center p-3">
+          <img src="./../../../assets/empty.svg" class="img-fluid" height="256px" width="256px" alt="No Data">
+          <h4 class="mt-3">
+            {{ selectedCourse === null ? 'Please Select Course' : 'No Assessment Added Yet' }}
+          </h4>
+        </div>
+      </div>
+      <div class="table-responsive" *ngIf="assessments?.length !== 0">
+        <table class="table table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th>Sr. No</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Total Marks</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let assessment of assessments; index as idx">
+              <td>{{ idx + 1 }}</td>
+              <td>{{ assessment.assessmentName }}</td>
+              <td>{{ assessment.assessmentType }}</td>
+              <td>{{ assessment.totalMarks }}</td>
+              <td>
+                <button type="button" class="btn btn-primary btn-sm mr-1 mb-1"
+                  (click)="downloadExcel(assessment)">
+                  Download Template
+                </button>
+                <button type="button" class="btn btn-primary btn-sm mr-1 mb-1"
+                  (click)="inDevelopment()">
+                  Import
+                </button>
+                <button type="button" class="btn btn-danger btn-sm mr-1 mb-1" (click)="inDevelopment()">View</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

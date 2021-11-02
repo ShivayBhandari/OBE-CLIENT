@@ -33,27 +33,25 @@
               <tr>
                 <th>Sr. No</th>
                 <th>Name</th>
-                <th>Type</th>
-                <th>Total Marks</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Designation</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let assessment of assessments; index as idx">
+              <tr *ngFor="let user of userList; index as idx">
                 <td>{{ idx + 1 }}</td>
-                <td>{{ assessment.assessmentName }}</td>
-                <td>{{ assessment.assessmentType }}</td>
-                <td>{{ assessment.totalMarks }}</td>
+                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.mobile }}</td>
+                <td>{{ user.designation }}</td>
                 <td>
-                  <!-- <button type="button" class="btn btn-primary btn-sm mr-1 mb-1"
-                    (click)="openViewModal(viewModal, assessment)">
-                    View Questions
-                  </button> -->
                   <button type="button" class="btn btn-primary btn-sm mr-1 mb-1"
-                    (click)="openUserModal(userModal, assessment)">
+                    (click)="openUserModal(userModal, user)">
                     Update
                   </button>
-                  <!-- <button type="button" class="btn btn-danger btn-sm mr-1 mb-1" (click)="deleteAssessment(deleteModal, assessment._id)">Delete</button> -->
+                  <button type="button" class="btn btn-danger btn-sm mr-1 mb-1" (click)="deleteUser(deleteModal, user._id)">Delete</button>
                 </td>
               </tr>
             </tbody>
@@ -69,7 +67,7 @@
     <div class="row w-100 m-0">
       <div class="col">
         <div class="d-flex justify-content-between align-items-center">
-          <h4>Course {{ updation ? "Updation" : "Creation" }}</h4>
+          <h4>Faculty {{ updation ? "Updation" : "Registeration" }}</h4>
           <button type="button" class="close" aria-label="Close" (click)="modal.dismiss();">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -77,27 +75,11 @@
       </div>
     </div>
   </div>
-  <form [formGroup]="userForm">
+  <form [formGroup]="userForm" (ngSubmit)="submitForm(userForm)">
     <div class="modal-body">
-      <!-- <div class="form-group col-12">
-        <label for="coCode" class="text-sm">Assessment Name</label>
-        <input id="assessmentName" type="text" name="assessmentName" formControlName="assessmentName"
-          class="form-control">
-        <span *ngIf="courseOutcomeForm.get('coCode').hasError('required')" class="text-sm text-danger">Course Outcome Ccde is Required</span>
-      </div>
-      <div class="form-group col-12">
-        <label for="coCodeStatement" class="text-sm">Assessment Type</label>
-        <select name="assessmentType" id="assessmentType" formControlName="assessmentType" class="custom-select">
-          <option [ngValue]="null">Select...</option>
-          <option *ngFor="let type of assessmentTypes; index as idx" [ngValue]="type">
-            {{ type }}
-          </option>
-        </select>
-      </div> -->
       <div class="form-group col-12">
         <label class="text-sm">Title</label>
-        <select name="title" id="title" class="custom-select"
-          formControlName="title">
+        <select name="title" id="title" class="custom-select" formControlName="title">
           <option [ngValue]="null">Select...</option>
           <option *ngFor="let dept of titles; index as idx" [ngValue]="dept">
             {{ dept }}
@@ -105,9 +87,39 @@
         </select>
       </div>
       <div class="form-group col-12">
+        <label class="text-sm">First Name</label>
+        <input type="text" name="firstName" formControlName="firstName" class="form-control">
+      </div>
+      <div class="form-group col-12">
+        <label class="text-sm">Last Name</label>
+        <input type="text" name="lastName" formControlName="lastName" class="form-control">
+      </div>
+      <div class="form-group col-12">
+        <label class="text-sm">Mobile</label>
+        <input type="text" name="mobile" formControlName="mobile" class="form-control">
+      </div>
+      <div class="form-group col-12">
+        <label class="text-sm">Email</label>
+        <input type="email" name="email" formControlName="email" class="form-control">
+      </div>
+      <div class="form-group col-12" *ngIf="!updation">
+        <label class="text-sm">Password</label>
+        <div class="input-group">
+          <input [type]="showPassword? 'text' : 'password'" name="password" formControlName="password"
+            class="form-control">
+          <div class="input-group-append">
+            <button class="btn btn-dark btn-sm" (click)="geneateNewPassword()">
+              <i class="material-icons">autorenew</i>
+            </button>
+            <button class="btn btn-dark btn-sm" (click)="changePasswordFieldMode()">
+              <i class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group col-12">
         <label class="text-sm">Department</label>
-        <select name="department" id="department" class="custom-select"
-          formControlName="department">
+        <select name="department" id="department" class="custom-select" formControlName="department">
           <option [ngValue]="null">Select...</option>
           <option *ngFor="let dept of departments; index as idx" [ngValue]="dept">
             {{ dept }}
@@ -116,13 +128,29 @@
       </div>
       <div class="form-group col-12">
         <label class="text-sm">Designation</label>
-        <select name="designation" id="designation" class="custom-select"
-          formControlName="designation">
+        <select name="designation" id="designation" class="custom-select" formControlName="designation">
           <option [ngValue]="null">Select...</option>
           <option *ngFor="let dept of designations; index as idx" [ngValue]="dept">
             {{ dept }}
           </option>
         </select>
+      </div>
+      <div class="form-group col-12">
+        <label class="text-sm">Gender</label>
+        <select name="gender" id="gender" class="custom-select" formControlName="gender">
+          <option [ngValue]="null">Select...</option>
+          <option [ngValue]="'male'">Male</option>
+          <option [ngValue]="'female'">Female</option>
+          <option [ngValue]="'ratherNotSay'">Rather Not To Say</option>
+        </select>
+      </div>
+      <div class="form-group col-12">
+        <label class="text-sm">Date of Birth</label>
+        <input type="date" name="dob" formControlName="dob" class="form-control">
+      </div>
+      <div class="form-group col-12">
+        <label class="text-sm">Date of Joining</label>
+        <input type="date" name="dateOfJoining" formControlName="dateOfJoining" class="form-control">
       </div>
     </div>
     <div class="modal-footer">
@@ -144,4 +172,27 @@
       </div>
     </div>
   </form>
+</ng-template>
+
+<ng-template #deleteModal let-modal>
+  <div class="modal-header d-flex justify-content-between align-items-center border-0">
+    <button type="button" class="close" aria-label="Close" id="closeModal" #closeModal
+      (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <img src="./../../../assets/warning.svg" alt="" class="img-fluid" width="128px" height="128px">
+      <h6 class="m-0 mt-2 text-muted">Are you sure want to delete this faculty?</h6>
+    </div>
+  </div>
+  <div class="modal-footer border-0">
+    <button type="button" class="btn btn-sm btn-dark float-right mr-2" (click)="modal.dismiss('Cross click')">
+      NO
+    </button>
+    <button type="submit" class="btn btn-sm btn-danger float-right mr-2" (click)="modal.close('1')">
+      YES
+    </button>
+  </div>
 </ng-template>

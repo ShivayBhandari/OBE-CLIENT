@@ -7,6 +7,7 @@ export class Assessments {
   termNo: number | undefined;
   courseTitle: string | undefined;
   courseId: string | undefined;
+  courseCode: string | undefined;
   assessmentType: number | undefined;
   assessmentName: string | undefined;
   questions: Questions[] | undefined;
@@ -17,6 +18,7 @@ export class Assessments {
 
 export class Questions {
   coCode: string | undefined;
+  bloomLevel: string | undefined;
   questionNo: string | undefined;
   questionStatement: string | undefined;
   maximumMarks: number = 0;

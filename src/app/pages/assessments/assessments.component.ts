@@ -5,7 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { combineLatest, Subscription } from 'rxjs';
 import { Assessments, Questions } from 'src/app/models/assessments';
-import { ASSESSMENT_TYPE } from 'src/app/models/constants';
+import { ASSESSMENT_TYPE, BLOOM_LEVELS } from 'src/app/models/constants';
 import { Course } from 'src/app/models/course';
 import { Curriculum } from 'src/app/models/curriculum';
 import { Term } from 'src/app/models/term';
@@ -31,6 +31,8 @@ export class AssessmentsComponent implements OnInit {
   assessmentForm: FormGroup | undefined;
   assessmentTypes: any[] = [];
 
+  bloomLevelKeys: string[] = [];
+
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
@@ -41,6 +43,7 @@ export class AssessmentsComponent implements OnInit {
 
   async ngOnInit() {
     this.assessmentTypes = ASSESSMENT_TYPE;
+    this.bloomLevelKeys = Object.keys(BLOOM_LEVELS);
   }
 
   courseSelection(value: Course) {
@@ -68,6 +71,7 @@ export class AssessmentsComponent implements OnInit {
       termNo: [this.selectedCourse?.termNo],
       courseTitle: [this.selectedCourse?.courseTitle],
       courseId: [this.selectedCourse?._id],
+      courseCode: [this.selectedCourse?.courseCode],
       assessmentType: [assessmentObj?.assessmentType || null],
       assessmentName: [assessmentObj?.assessmentName || null],
       totalMarks: [assessmentObj?.totalMarks || null],
@@ -78,6 +82,7 @@ export class AssessmentsComponent implements OnInit {
   initialQuestionForm(questionObj?: Questions | undefined) {
     return this.fb.group({
       coCode: [questionObj?.coCode || null, Validators.required],
+      bloomLevel: [questionObj?.bloomLevel || this.bloomLevelKeys[0], Validators.required],
       questionNo: [questionObj?.questionNo || this.getQuestionsControl().length + 1, Validators.required],
       questionStatement: [questionObj?.questionStatement || null, Validators.required],
       maximumMarks: [questionObj?.maximumMarks || null, Validators.required]

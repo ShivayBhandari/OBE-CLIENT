@@ -10,3 +10,7 @@ html, body {
   left: 0;
   top: 8.35rem;
 }
+
+.active { 
+  font-weight: 700;
+}

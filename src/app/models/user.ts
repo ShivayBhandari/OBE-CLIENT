@@ -8,6 +8,10 @@ export class User {
   department: string | undefined;
   designation: string | undefined;
   mobile: string | undefined;
+  dateOfJoining: Date | undefined;
+  dob: Date | undefined;
+  gender: string | undefined;
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
+  superAdmin: boolean | undefined;
 }

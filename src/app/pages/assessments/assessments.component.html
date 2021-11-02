@@ -129,6 +129,13 @@
                     <option value="CO6">CO6</option>
                   </select>
                 </div>
+                <div class="form-group m-0 mb-1">
+                  <label>RBT Level</label>
+                  <select name="bloomLevel" id="bloomLevel" formControlName="bloomLevel" class="custom-select">
+                    <option [value]="null">Select</option>
+                    <option *ngFor="let level of bloomLevelKeys" [ngValue]="level">{{ level }}</option>
+                  </select>
+                </div>
                 <div class="form-group m-0 mb-4">
                   <label>Maximum Marks</label>
                   <input type="number" class="form-control" name="maximumMarks" id="maximumMarks"
@@ -170,14 +177,19 @@
 </ng-template>
 
 <ng-template #deleteModal let-modal>
-  <div class="modal-header d-flex justify-content-between align-items-center">
-    <h6 class="m-0">Are you sure want to delete this assessment?</h6>
+  <div class="modal-header d-flex justify-content-between align-items-center border-0">
     <button type="button" class="close" aria-label="Close" id="closeModal" #closeModal
       (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-footer">
+  <div class="modal-body">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <img src="./../../../assets/warning.svg" alt="" class="img-fluid" width="128px" height="128px">
+      <h6 class="m-0 mt-2 text-muted">Are you sure want to delete this assessment?</h6>
+    </div>
+  </div>
+  <div class="modal-footer border-0">
     <button type="button" class="btn btn-sm btn-dark float-right mr-2" (click)="modal.dismiss('Cross click')">
       NO
     </button>
@@ -189,7 +201,10 @@
 
 <ng-template #viewModal let-modal>
   <div class="modal-header d-flex justify-content-between align-items-center">
-    <h6 class="m-0">{{ assessmentModel?.assessmentName }} Questions</h6>
+    <div class="d-flex flex-column">
+      <h5 class="m-0 mb-1">{{ assessmentModel?.assessmentName }} Questions</h5>
+      <span>Total Marks: <strong>{{ assessmentModel.totalMarks || 0 }}</strong></span>
+    </div>
     <button type="button" class="close" aria-label="Close" id="closeModal" #closeModal
       (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
@@ -211,7 +226,7 @@
             <td>{{ idx + 1 }}</td>
             <td>{{ question.coCode }}</td>
             <td class="text-wrap text-justify">{{ question.questionStatement }}</td>
-            <td>{{ question.maximumMarks }}</td>
+            <td class="text-center">{{ question.maximumMarks }}</td>
           </tr>
         </tbody>
       </table> 

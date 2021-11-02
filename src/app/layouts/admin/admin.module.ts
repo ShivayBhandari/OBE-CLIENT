@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AdminRoutingModule } from './admin-routing.module';
@@ -12,6 +12,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UsersComponent } from '../../pages/users/users.component';
 import { AssessmentsComponent } from '../../pages/assessments/assessments.component';
 import { FiltersComponent } from '../../components/filters/filters.component';
+import { AttainmentModule } from 'src/app/sub-layouts/attainment/attainment.module';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,8 @@ import { FiltersComponent } from '../../components/filters/filters.component';
     FormsModule,
     ReactiveFormsModule,
     NgbModule
-  ]
+  ],
+  exports: [FiltersComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AdminModule { }
