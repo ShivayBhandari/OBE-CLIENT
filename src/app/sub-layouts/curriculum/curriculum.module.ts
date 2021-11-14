@@ -7,6 +7,7 @@ import { CoMappingComponent } from '../../pages/co-mapping/co-mapping.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CourseOutcomeComponent } from '../../pages/course-outcome/course-outcome.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     CurriculumRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    ComponentsModule,
     NgbModule
   ]
 })

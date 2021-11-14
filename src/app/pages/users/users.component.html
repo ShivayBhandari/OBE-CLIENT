@@ -108,10 +108,10 @@
           <input [type]="showPassword? 'text' : 'password'" name="password" formControlName="password"
             class="form-control">
           <div class="input-group-append">
-            <button class="btn btn-dark btn-sm" (click)="geneateNewPassword()">
+            <button type="button" class="btn btn-dark btn-sm" (click)="geneateNewPassword()">
               <i class="material-icons">autorenew</i>
             </button>
-            <button class="btn btn-dark btn-sm" (click)="changePasswordFieldMode()">
+            <button type="button" class="btn btn-dark btn-sm" (click)="changePasswordFieldMode()">
               <i class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</i>
             </button>
           </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { combineLatest, Subscription } from 'rxjs';
 import { Course } from 'src/app/models/course';
 import { Curriculum } from 'src/app/models/curriculum';
@@ -24,12 +24,12 @@ export class FiltersComponent implements OnInit {
   listSub: Subscription | undefined;
 
   @Output() courseSelections: EventEmitter<Course> = new EventEmitter<Course>();
-
+  
   constructor(
     private dataService: DataService
   ) { }
 
-  async ngOnInit() {
+  async ngOnInit() { 
 
     this.dataService.getCourses();
     this.dataService.getCurriculums();

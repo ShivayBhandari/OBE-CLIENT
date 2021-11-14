@@ -1,4 +1,3 @@
-<!-- <app-filters></app-filters> -->
 <div class="row w-100 m-0">
   <div class="col px-0">
     <div class="card border">
@@ -7,36 +6,7 @@
           <div class="col-12 col-sm-8">
             <div class="d-flex flex-column">
               <h4 class="m-0">Marks Imports</h4>
-              <div class="row w-100 m-0 mt-2">
-                <div class="form-group col-3 px-0 m-0 mr-2">
-                  <select name="curriculums" id="curriculums" class="custom-select" [ngModel]="selectedCurriculum"
-                    (ngModelChange)="curriculumSelection($event)">
-                    <option [ngValue]="null">Select Curriculums</option>
-                    <option *ngFor="let curr of curriculums; index as idx" [ngValue]="curr">
-                      {{ curr.curriculumName }}
-                    </option>
-                  </select>
-                </div>
-                <div class="form-group col-3 px-0 m-0 mr-2">
-                  <select name="terms" id="terms" class="custom-select" [disabled]="terms?.length === 0"
-                    [ngModel]="selectedTerm" (ngModelChange)="termselection($event)">
-                    <option [ngValue]="null">Select terms</option>
-                    <option *ngFor="let term of terms; index as idx" [ngValue]="term">
-                      {{ term.termName }}
-                    </option>
-                  </select>
-                </div>
-                <div class="form-group col-3 px-0 m-0 mr-2">
-                  <select name="course" id="course" class="custom-select"
-                    [disabled]="selectedTerm === null || courses?.length === 0" [ngModel]="selectedCourse"
-                    (ngModelChange)="courseSelection($event)">
-                    <option [ngValue]="null">Select Course</option>
-                    <option *ngFor="let course of courses; index as idx" [ngValue]="course">
-                      {{ course.courseTitle }}
-                    </option>
-                  </select>
-                </div>
-              </div>
+              <app-filters (courseSelections)="courseSelection($event)"></app-filters>
             </div>
           </div>
         </div>
@@ -67,15 +37,19 @@
               <td>{{ assessment.assessmentType }}</td>
               <td>{{ assessment.totalMarks }}</td>
               <td>
-                <button type="button" class="btn btn-primary btn-sm mr-1 mb-1"
-                  (click)="downloadExcel(assessment)">
+                <button type="button" class="btn btn-primary btn-sm mr-1 mb-1" (click)="downloadExcel(assessment)">
                   Download Template
                 </button>
-                <button type="button" class="btn btn-primary btn-sm mr-1 mb-1"
-                  (click)="inDevelopment()">
+                <input type="file" #file (change)="inDevelopment($event.target.files, assessment)" hidden>
+                <button type="button" class="btn btn-primary btn-sm mr-1 mb-1" (click)="file.click()"
+                  [disabled]="loader">
                   Import
+                  <span *ngIf="loader">&nbsp;</span>
+                  <div *ngIf="loader" class="spinner-border spinner-border-sm text-white" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
                 </button>
-                <button type="button" class="btn btn-danger btn-sm mr-1 mb-1" (click)="inDevelopment()">View</button>
+                <button type="button" class="btn btn-primary btn-sm mr-1 mb-1" (click)="fetchStudentMarks(assessment, viewStudentMarks)">View</button>
               </td>
             </tr>
           </tbody>
@@ -84,3 +58,54 @@
     </div>
   </div>
 </div>
+
+<ng-template #viewStudentMarks let-modal>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <div class="d-flex flex-column">
+      <h5 class="m-0 mb-1">{{ selectedAssessment?.assessmentName }}</h5>
+      <span>Total Marks: <strong>{{ selectedAssessment.totalMarks || 0 }}</strong></span>
+    </div>
+    <button type="button" class="close" aria-label="Close" id="closeModal" #closeModal
+      (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body p-0">
+    <div class="table-responsive">
+      <table class="table table-flush">
+        <thead class="thead-light">
+          <tr>
+            <th>Sr. No</th>
+            <th>Student Name</th>
+            <th>URN</th>
+            <th>CRN</th>
+            <th *ngFor="let question of selectedAssessment.questions; index as idx" class="text-center">
+              {{ "Q" +question.questionNo }} [{{ question.maximumMarks }}]
+            </th>
+            <th class="text-center">Total Obtained Marks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let std of studentAttainments; index as idx">
+            <td>{{ idx + 1 }}</td>
+            <td>{{ std.studentName }}</td>
+            <td>{{ std.urn }}</td>
+            <td>{{ std.crn }}</td>
+            <td *ngFor="let question of selectedAssessment.questions; index as idx" class="text-center" [ngClass]="{
+              'text-danger': checkStringType(std.questions[idx].obtainedMarks),
+              'font-weight-bold': checkStringType(std.questions[idx].obtainedMarks)
+            }">
+              {{ std.questions[idx].obtainedMarks }}
+            </td>
+            <td class="text-center">{{ std.totalObtainedMarks }}</td>
+          </tr>
+        </tbody>
+      </table> 
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-dark float-right mr-2" (click)="modal.dismiss('Cross click')">
+      Close
+    </button>
+  </div>
+</ng-template>

@@ -11,8 +11,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UsersComponent } from '../../pages/users/users.component';
 import { AssessmentsComponent } from '../../pages/assessments/assessments.component';
-import { FiltersComponent } from '../../components/filters/filters.component';
 import { AttainmentModule } from 'src/app/sub-layouts/attainment/attainment.module';
+import { CurriculumModule } from 'src/app/sub-layouts/curriculum/curriculum.module';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   declarations: [
@@ -23,16 +24,18 @@ import { AttainmentModule } from 'src/app/sub-layouts/attainment/attainment.modu
     UserProfileComponent,
     UsersComponent,
     AssessmentsComponent,
-    FiltersComponent
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    AttainmentModule,
+    CurriculumModule,
+    ComponentsModule,
     NgbModule
   ],
-  exports: [FiltersComponent],
+  exports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AdminModule { }

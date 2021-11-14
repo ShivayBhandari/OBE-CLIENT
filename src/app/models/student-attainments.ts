@@ -1,5 +1,10 @@
-export class Assessments {
+import { Questions } from './assessments';
+
+export class StudentAttainments {
   _id: string | undefined;
+  studentName: string | undefined;
+  urn: number | undefined;
+  crn: number | undefined;
   curriculumId: string | undefined;
   curriculumName: string | undefined;
   termId: string | undefined;
@@ -8,19 +13,12 @@ export class Assessments {
   courseTitle: string | undefined;
   courseId: string | undefined;
   courseCode: string | undefined;
-  assessmentType: number | undefined;
+  assessmentId: number | undefined;
+  assessmentType: string | undefined;
   assessmentName: string | undefined;
-  questions: Questions[] | undefined;
+  questions: Questions[] = [];
   totalMarks: number | undefined;
+  totalObtainedMarks: number | undefined;
   createdAt: Date | undefined;
   updateAt: Date | undefined;
-}
-
-export class Questions {
-  coCode: string | undefined;
-  bloomLevel: string | undefined;
-  questionNo: string | undefined;
-  questionStatement: string | undefined;
-  maximumMarks: number = 0;
-  obtainedMarks?: number | string | undefined;
 }

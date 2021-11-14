@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ImportsMarksComponent } from '../../pages/imports-marks/imports-marks.component';
 import { CoAttainmentComponent } from '../../pages/co-attainment/co-attainment.component';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { CoAttainmentComponent } from '../../pages/co-attainment/co-attainment.c
     AttainmentRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    ComponentsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
