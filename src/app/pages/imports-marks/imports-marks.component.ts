@@ -133,7 +133,7 @@ export class ImportsMarksComponent implements OnInit {
   fetchStudentMarks(assessmentModel: Assessments, modalRef: any) {
     this.selectedAssessment = assessmentModel;
     this.httpClient.get<{ attainments: StudentAttainments[] }>(
-      `${environment.serverUrl}/attainments/${this.selectedCourse?._id}/${assessmentModel._id}`,
+      `${environment.serverUrl}/attainments/${this.selectedCourse?._id}/student-marks/${assessmentModel._id}`,
       { headers: this.dataService.httpHeaders }
     ).toPromise()
     .then((value) => {
