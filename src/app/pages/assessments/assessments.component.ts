@@ -3,12 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { combineLatest, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Assessments, Questions } from 'src/app/models/assessments';
 import { ASSESSMENT_TYPE, BLOOM_LEVELS } from 'src/app/models/constants';
 import { Course } from 'src/app/models/course';
-import { Curriculum } from 'src/app/models/curriculum';
-import { Term } from 'src/app/models/term';
 import { DataService } from 'src/app/services/data.service';
 import { environment } from 'src/environments/environment';
 
@@ -32,6 +30,7 @@ export class AssessmentsComponent implements OnInit {
   assessmentTypes: any[] = [];
 
   bloomLevelKeys: string[] = [];
+  eseBool: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -53,8 +52,8 @@ export class AssessmentsComponent implements OnInit {
     })
       .toPromise()
       .then((value) => {
-        // console.log(">>> Value: ", value.assessments);
         this.assessments = [...value.assessments];
+        this.eseBool = this.assessments.some(x => x.assessmentType === 'ESE') ? true : false;
       }, (err) => {
         console.log(">>> error: ", err);
       })

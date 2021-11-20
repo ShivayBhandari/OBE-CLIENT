@@ -8,7 +8,7 @@ export class Assessments {
   courseTitle: string | undefined;
   courseId: string | undefined;
   courseCode: string | undefined;
-  assessmentType: number | undefined;
+  assessmentType: string | undefined;
   assessmentName: string | undefined;
   questions: Questions[] | undefined;
   totalMarks: number | undefined;

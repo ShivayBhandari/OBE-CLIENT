@@ -40,7 +40,7 @@
                 <button type="button" class="btn btn-primary btn-sm mr-1 mb-1" (click)="downloadExcel(assessment)">
                   Download Template
                 </button>
-                <input type="file" #file (change)="inDevelopment($event.target.files, assessment)" hidden>
+                <input type="file" #file (change)="selectMarkFile($event.target.files, assessment)" hidden>
                 <button type="button" class="btn btn-primary btn-sm mr-1 mb-1" (click)="file.click()"
                   [disabled]="loader">
                   Import

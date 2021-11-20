@@ -90,7 +90,7 @@
         <label for="coCodeStatement" class="text-sm">Assessment Type</label>
         <select name="assessmentType" id="assessmentType" formControlName="assessmentType" class="custom-select">
           <option [ngValue]="null">Select...</option>
-          <option *ngFor="let type of assessmentTypes; index as idx" [ngValue]="type">
+          <option *ngFor="let type of assessmentTypes; index as idx" [ngValue]="type" [disabled]="type === 'ESE' && eseBool">
             {{ type }}
           </option>
         </select>
@@ -212,7 +212,7 @@
   </div>
   <div class="modal-body p-0">
     <div class="table-responsive">
-      <table class="table table-flush">
+      <table class="table table-flush text-center">
         <thead class="thead-light">
           <tr>
             <th>Sr. No</th>
