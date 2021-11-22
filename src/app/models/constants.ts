@@ -24,7 +24,7 @@ export const COURSE_TYPE = [
   'Lab / Projects / Others',
 ];
 
-export const ASSESSMENT_TYPE = ['Assignment', 'MST', 'Quiz'];
+export const ASSESSMENT_TYPE = ['Assignment', 'MST', 'Quiz', 'ESE'];
 
 export const DELIVERY_METHODS = [
   'Brainstorming',

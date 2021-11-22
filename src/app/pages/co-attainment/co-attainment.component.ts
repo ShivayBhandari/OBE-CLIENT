@@ -20,7 +20,10 @@ export class CoAttainmentComponent implements OnInit {
 
   title: string | undefined;
   studentsAttainments: StudentAttainments[] = [];
-  attainemntOutput: any[] = [];
+  
+  ciaAttainment: any[] = [];
+  eseAttainment: any[] = [];
+  totalDirectAttainment: any[] = [];
 
   constructor(
     private toast: ToastrService,
@@ -31,52 +34,37 @@ export class CoAttainmentComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.title = this.router.url.replace('/', "").split("/")[1].split("-").map(e => e.toUpperCase()).join(" ");
   }
 
   getStudentAttainments(courseId: string | undefined) {
-    this.httpClient.get<{ attainments: StudentAttainments[] }>(
+    this.httpClient.get<{ ciaMarks: StudentAttainments[], eseMarks: StudentAttainments[] }>(
       `${environment.serverUrl}/attainments/${courseId}`,
       { headers: this.dataService.httpHeaders }
     ).toPromise()
     .then((value) => {
-      let attainments: StudentAttainments[] = [ ...value.attainments ];
-      let map:Map<number | undefined, any> = new Map<number | undefined, any>();
-
-      attainments.forEach((std, idx) => {
-        if(map.has(std.crn)) {
-          // console.log(">>> Already Existed");
-          let stdMap = { ...map.get(std?.crn) };  
-          std.questions?.forEach((e, idx) => {
-            stdMap.questions.push({
-              ...e,
-              "assessmentId": std.assessmentId,
-              "assessmentName": std.assessmentName,
-              "assessmentType": std.assessmentType
-            });
-          });
-          delete stdMap?.assessmentId;
-          delete stdMap?.assessmentName;
-          delete stdMap?.assessmentType;   
-          map.set(std.crn, { ...stdMap });
-        } else {
-          // console.log(">>> New Occurences");
-          let obj = { ...std };
-          obj.questions = obj.questions?.map(e => ({
-            ...e,
-            "assessmentId": std.assessmentId,
-            "assessmentName": std.assessmentName,
-            "assessmentType": std.assessmentType
-          }));
-          delete obj?.assessmentId;
-          delete obj?.assessmentName;
-          delete obj?.assessmentType;
-          map.set(std.crn, { ...obj });
-        }
+      console.log(value);
+      
+      this.ciaAttainment = this.calculateAttainemnt(this.formatRecord([...value.ciaMarks]));
+      this.eseAttainment = this.calculateAttainemnt(this.formatRecord([...value.eseMarks]));
+      this.totalDirectAttainment = CO_CODE.map((code, idx) => {
+        let coAttain = (0.4 * Math.round(this.ciaAttainment[idx]['attaimentPercentage'] * 100)) + (0.6 * Math.round(this.eseAttainment[idx]['attaimentPercentage'] * 100));
+        let attainmentObj = this.checkAttainment(coAttain);
+        return {
+          'coCode': code,
+          'ciaPercentage': this.ciaAttainment[idx]['attaimentPercentage'],
+          'esePercentage': this.eseAttainment[idx]['attaimentPercentage'],
+          'totalAttainment': coAttain / 100,
+          'attainmentLevel': attainmentObj.attainmentLevel,
+          'date': new Date()
+        };
       });
-      map.forEach((value, key) => this.studentsAttainments.push({ ...value }));
-      this.calculateDirectCOAttainemnt();
+
+      console.log(this.totalDirectAttainment);
+      
+      
+      // let attainments: StudentAttainments[] = [ ...value.ciaMarks ];
+      // this.calculateDirectCOAttainemnt();
       
     }, (error) => {
       console.log(">>> error: ", error);
@@ -84,9 +72,45 @@ export class CoAttainmentComponent implements OnInit {
     })
   }
 
-  calculateDirectCOAttainemnt() {
-    console.log(">>> Student Attainment: ", this.studentsAttainments);
-    let stdRecords = [...this.studentsAttainments];
+  formatRecord(attainments: StudentAttainments[]) {
+    let studentMarks: StudentAttainments[] = [];
+    let map:Map<number | undefined, any> = new Map<number | undefined, any>();
+    attainments.forEach((std, idx) => {
+      if(map.has(std.crn)) {
+        // console.log(">>> Already Existed");
+        let stdMap = { ...map.get(std?.crn) };  
+        std.questions?.forEach((e, idx) => {
+          stdMap.questions.push({
+            ...e,
+            "assessmentId": std.assessmentId,
+            "assessmentName": std.assessmentName,
+            "assessmentType": std.assessmentType
+          });
+        });
+        delete stdMap?.assessmentId;
+        delete stdMap?.assessmentName;
+        delete stdMap?.assessmentType;   
+        map.set(std.crn, { ...stdMap });
+      } else {
+        // console.log(">>> New Occurences");
+        let obj = { ...std };
+        obj.questions = obj.questions?.map(e => ({
+          ...e,
+          "assessmentId": std.assessmentId,
+          "assessmentName": std.assessmentName,
+          "assessmentType": std.assessmentType
+        }));
+        delete obj?.assessmentId;
+        delete obj?.assessmentName;
+        delete obj?.assessmentType;
+        map.set(std.crn, { ...obj });
+      }
+    });
+    map.forEach((value, key) => studentMarks.push({ ...value }));
+    return studentMarks;
+  }
+
+  calculateAttainemnt(stdRecords: StudentAttainments[]) {
     let benchMark = 60;
     let coCODEs = [ ...CO_CODE ];
     let CO_Object: any = {
@@ -131,29 +155,52 @@ export class CoAttainmentComponent implements OnInit {
         let attaimentPercentage = Math.round((CO_Object[CO].count / stdRecords.length) * 100);
         CO_Object[CO].attaimentPercentage = (CO_Object[CO].count / stdRecords.length);
 
-        if (attaimentPercentage >= 70) {
-          CO_Object[CO].attainmentLevel = 3;
-          CO_Object[CO].attainmentType = "High";
-          CO_Object[CO].attainment = "Target Attained";
-        }
-        else if (attaimentPercentage >= 60) {
-          CO_Object[CO].attainmentType = "Moderate";
-          CO_Object[CO].attainmentLevel = 2;
-          CO_Object[CO].attainment = "Target Attained";
-        }
-        else if (attaimentPercentage >= 50) {
-          CO_Object[CO].attainmentLevel = 1;
-          CO_Object[CO].attainmentType = "Low";
-          CO_Object[CO].attainment = "Target Attained";
-        }
-        else {
-          CO_Object[CO].attainment = "Target Not Attained";
-        }
+        let obj = this.checkAttainment(attaimentPercentage);
+        CO_Object[CO].attainmentLevel = obj.attainmentLevel;
+        CO_Object[CO].attainmentType = obj.attainmentType;
+        CO_Object[CO].attainment = obj.attainment;
       }
     });
+    return Object.values(CO_Object) || [];
+  }
 
-    console.log(CO_Object);
-    this.attainemntOutput = Object.values(CO_Object) || [];
+  checkAttainment(value: number) {
+    let attainmentObj: {
+      attainmentLevel: number | undefined;
+      attainmentType: string | undefined;
+      attainment: string | undefined;
+    };
+
+    if (value >= 70) {
+      attainmentObj = {
+        attainmentLevel: 3,
+        attainmentType: "High",
+        attainment: "Target Attained"
+      };
+    }
+    else if (value >= 60) {
+      attainmentObj = {
+        attainmentLevel: 2,
+        attainmentType: "Moderate",
+        attainment: "Target Attained"
+      };
+    }
+    else if (value >= 50) {
+      attainmentObj = {
+        attainmentLevel: 1,
+        attainmentType: "Low",
+        attainment: "Target Attained"
+      };
+    }
+    else {
+      attainmentObj = {
+        attainmentLevel: 0,
+        attainmentType: "",
+        attainment: "Target Not Attained"
+      };
+    }
+
+    return attainmentObj;
   }
 
 }

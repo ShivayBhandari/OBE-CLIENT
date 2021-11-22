@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { StudentAttainments } from 'src/app/models/student-attainments';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-imports-marks',
@@ -27,6 +28,8 @@ export class ImportsMarksComponent implements OnInit {
   fetching: boolean = false;
   updation: boolean = false;
   loader: boolean = false;
+  ciaBool: boolean = false;
+
   assessments: Assessments[] = [];
   selectedAssessment: Assessments | undefined;
   studentAttainments: StudentAttainments[] = [];
@@ -36,13 +39,16 @@ export class ImportsMarksComponent implements OnInit {
     private httpClient: HttpClient,
     private toast: ToastrService,
     private modalService: NgbModal,
+    private router: Router
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.ciaBool = this.router.url.replace("/", "").split("/").some(x => x.includes('cia'));  
+  }
 
   courseSelection(value: Course) {
     this.selectedCourse = value;
-    this.httpClient.get<{ assessments: Assessments[] }>(`${environment.serverUrl}/assessments/${value._id}`, {
+    this.httpClient.get<{ assessments: Assessments[] }>(`${environment.serverUrl}/assessments/${value._id}/${this.ciaBool ? 'cia-marks' : 'ese-marks'}`, {
       headers: this.dataService.httpHeaders
     })
       .toPromise()
@@ -64,9 +70,8 @@ export class ImportsMarksComponent implements OnInit {
     FileSaver.saveAs(data, `${assessment?.courseTitle?.trim().replace(/ /g, "_").toLowerCase()}_${assessment?.assessmentName?.split(" ").join("")}_${new DatePipe('en-US').transform(new Date(), 'yyyyMMdd')}.xlsx`);
   }
 
-  async inDevelopment(files: any, assessment: Assessments | undefined) {
+  async selectMarkFile(files: any, assessment: Assessments | undefined) {
     let tempFile = files[0];
-    console.log(">>>: ", tempFile);
     let arrayBuffer: any;
     let fileReader: FileReader = new FileReader();
     fileReader.readAsArrayBuffer(tempFile);
@@ -83,7 +88,6 @@ export class ImportsMarksComponent implements OnInit {
       let studentMarks_excelResponse: any[] = XLSX.utils.sheet_to_json(worksheet, { raw: true });
       let studentMarks = studentMarks_excelResponse.map((std, idx) => {
         let assessmentObj = { ...assessment }; // Shallow Copy of Assessment
-        
         delete assessmentObj._id; // Delete ID Attribute
         assessmentObj.questions = assessmentObj.questions?.map(e => {
           let stdMarkKey: string | undefined = `Q${e.questionNo} [${e.maximumMarks}] [${e.coCode}]`;
@@ -92,7 +96,6 @@ export class ImportsMarksComponent implements OnInit {
             obtainedMarks: std[stdMarkKey]
           };
         });
-
         return {
           studentName: std["Student Name"],
           urn: std["URN"],
@@ -103,15 +106,13 @@ export class ImportsMarksComponent implements OnInit {
         }
       });
       this.importStudentMarks(studentMarks);
-      console.log(">>> Student Marks: ", studentMarks);
     }    
-    // this.toast.success("In Development", "Coming Soon...");
   }
 
   importStudentMarks(studentMarks: any[]) {
     this.loader = true;
     this.httpClient.post(
-      `${environment.serverUrl}/attainments/add-student-attainment`, 
+      `${environment.serverUrl}/attainments/add-student-marks?ciaBool=${this.ciaBool}`, 
       { data: [...studentMarks] },
       { headers: this.dataService.httpHeaders }
     )
@@ -119,7 +120,7 @@ export class ImportsMarksComponent implements OnInit {
     .then((res) => {
       this.loader = false;
       console.log(">>> res: ", res);
-      this.toast.show(res.toString())
+      this.toast.success("Marks Imported Successfully")
     }, (error) => {
       this.loader = false;
       console.error(">>> error: ", error);
@@ -133,7 +134,7 @@ export class ImportsMarksComponent implements OnInit {
   fetchStudentMarks(assessmentModel: Assessments, modalRef: any) {
     this.selectedAssessment = assessmentModel;
     this.httpClient.get<{ attainments: StudentAttainments[] }>(
-      `${environment.serverUrl}/attainments/${this.selectedCourse?._id}/student-marks/${assessmentModel._id}`,
+      `${environment.serverUrl}/attainments/${this.selectedCourse?._id}/${assessmentModel._id}?ciaBool=${this.ciaBool}`,
       { headers: this.dataService.httpHeaders }
     ).toPromise()
     .then((value) => {
