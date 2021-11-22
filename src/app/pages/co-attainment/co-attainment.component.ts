@@ -61,11 +61,8 @@ export class CoAttainmentComponent implements OnInit {
       });
 
       console.log(this.totalDirectAttainment);
-      
-      
       // let attainments: StudentAttainments[] = [ ...value.ciaMarks ];
       // this.calculateDirectCOAttainemnt();
-      
     }, (error) => {
       console.log(">>> error: ", error);
       
@@ -75,6 +72,8 @@ export class CoAttainmentComponent implements OnInit {
   formatRecord(attainments: StudentAttainments[]) {
     let studentMarks: StudentAttainments[] = [];
     let map:Map<number | undefined, any> = new Map<number | undefined, any>();
+    if(attainments.length === 0) return studentMarks;
+
     attainments.forEach((std, idx) => {
       if(map.has(std.crn)) {
         // console.log(">>> Already Existed");
@@ -121,6 +120,9 @@ export class CoAttainmentComponent implements OnInit {
       "CO5": { coCode: "CO5", count: 0, maximumMarks: 0, attainment: "Not Applicable", attainmentLevel: 0, attainmentType: "Very Low", attaimentPercentage: 0 },
       "CO6": { coCode: "CO6", count: 0, maximumMarks: 0, attainment: "Not Applicable", attainmentLevel: 0, attainmentType: "Very Low", attaimentPercentage: 0 }
     };
+
+    if(stdRecords.length === 0) return Object.values(CO_Object);
+
     let totalQuestions = stdRecords[0].questions?.length; // 19
     console.log(">>> Total Questions: ", totalQuestions);    
 
