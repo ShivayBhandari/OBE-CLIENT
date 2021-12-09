@@ -11,68 +11,12 @@
           </div>
         </div>
       </div>
-      <div class="card-body" >
+      <div class="card-body">
         <div class="d-flex flex-olumn align-items-center justify-content-center p-4" *ngIf="ciaAttainment.length === 0">
           <img src="./../../../assets/empty.svg" alt="" class="img-fluid" height="256px" width="256px">
         </div>
         <div class="row w-100 m-0" *ngIf="ciaAttainment.length !== 0">
-          <div class="col-12 col-sm-6 mt-2 mt-sm-0 p-1" >
-            <div class="d-flex flex-column">
-              <h5 class="m-0 mb-2">Course Outcome (CO) Attainment Table of CIA</h5>
-              <div class="table-responsive">
-                <table class="table table-flush text-center">
-                  <thead class="thead-light">
-                    <tr>
-                      <th>Sr. No</th>
-                      <th>CO Code</th>
-                      <th>Attainment Level</th>
-                      <th>Attainment Percentage</th>
-                      <!-- <th></th> -->
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let co of ciaAttainment; index as idx">
-                      <td>{{ idx + 1 }}</td>
-                      <td>{{ co.coCode }}</td>
-                      <td class="font-weight-bold">{{ co.attainmentLevel }}</td>
-                      <td class="font-weight-bold">{{ co.attaimentPercentage | percent:'1.2':'en-US' }}</td>
-                      <!-- <td></td> -->
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-sm-6 mt-2 mt-sm-0 p-1" >
-            <div class="d-flex flex-column">
-              <h5 class="m-0 mb-2">Course Outcome (CO) Attainment Table of ESE</h5>
-              <div class="table-responsive">
-                <table class="table table-flush text-center">
-                  <thead class="thead-light">
-                    <tr>
-                      <th>Sr. No</th>
-                      <th>CO Code</th>
-                      <th>Attainment Level</th>
-                      <th>Attainment Percentage</th>
-                      <!-- <th></th> -->
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let co of eseAttainment; index as idx">
-                      <td>{{ idx + 1 }}</td>
-                      <td>{{ co.coCode }}</td>
-                      <td class="font-weight-bold">{{ co.attainmentLevel }}</td>
-                      <td class="font-weight-bold">{{ co.attaimentPercentage | percent:'1.2':'en-US' }}</td>
-                      <!-- <td></td> -->
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row w-100 m-0" *ngIf="ciaAttainment.length !== 0">
-          <div class="col-12 col-sm-6 mt-2 mt-sm-0 p-1">
+          <div class="col-12 mt-2 mt-sm-0 p-1">
             <div class="d-flex flex-column">
               <h5 class="m-0 mb-2">Target Table</h5>
               <div class="table-responsive">
@@ -109,7 +53,65 @@
               </div>
             </div>
           </div>
-          <div class="col-12 col-sm-6 mt-2 mt-sm-0 p-1" >
+        </div>
+        <div class="row w-100 m-0" *ngIf="ciaAttainment.length !== 0">
+          <div class="col-12 col-sm-6 mt-2 mt-sm-0 p-1">
+            <div class="d-flex flex-column">
+              <h5 class="m-0 mb-2">Course Outcome (CO) Attainment Table of CIA</h5>
+              <div class="table-responsive">
+                <table class="table table-flush text-center">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>Sr. No</th>
+                      <th>CO Code</th>
+                      <th>Attainment Level</th>
+                      <th>Attainment Percentage</th>
+                      <!-- <th></th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let co of ciaAttainment; index as idx">
+                      <td>{{ idx + 1 }}</td>
+                      <td>{{ co.coCode }}</td>
+                      <td class="font-weight-bold">{{ co.attainmentLevel }}</td>
+                      <td class="font-weight-bold">{{ co.attaimentPercentage | percent:'1.2':'en-US' }}</td>
+                      <!-- <td></td> -->
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 mt-2 mt-sm-0 p-1">
+            <div class="d-flex flex-column">
+              <h5 class="m-0 mb-2">Course Outcome (CO) Attainment Table of ESE</h5>
+              <div class="table-responsive">
+                <table class="table table-flush text-center">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>Sr. No</th>
+                      <th>CO Code</th>
+                      <th>Attainment Level</th>
+                      <th>Attainment Percentage</th>
+                      <!-- <th></th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let co of eseAttainment; index as idx">
+                      <td>{{ idx + 1 }}</td>
+                      <td>{{ co.coCode }}</td>
+                      <td class="font-weight-bold">{{ co.attainmentLevel }}</td>
+                      <td class="font-weight-bold">{{ co.attaimentPercentage | percent:'1.2':'en-US' }}</td>
+                      <!-- <td></td> -->
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row w-100 m-0" *ngIf="ciaAttainment.length !== 0">
+          <div class="col-12 mt-2 mt-sm-0 p-1">
             <div class="d-flex flex-column">
               <h5 class="m-0 mb-2">Total Direct Attainment</h5>
               <div class="table-responsive">
@@ -141,8 +143,90 @@
             </div>
           </div>
         </div>
+        <div class="row w-100 m-0" *ngIf="ciaAttainment.length !== 0">
+          <div class="col-12 mt-2 mt-sm-0 p-1">
+            <div class="d-flex flex-column">
+              <h5 class="m-0 mb-2">Total Indirect Attainment</h5>
+              <div class="table-responsive">
+                <table class="table table-flush text-center">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>Sr. No</th>
+                      <th>CO Code</th>
+                      <th>1</th>
+                      <th>%</th>
+                      <th>2</th>
+                      <th>%</th>
+                      <th>3</th>
+                      <th>%</th>
+                      <th>4</th>
+                      <th>%</th>
+                      <th>5</th>
+                      <th>%</th>
+                      <th>Total Average (%)</th>
+                      <th>Attainment Level</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let co of totalIndirectAttainment; index as idx">
+                      <td>{{ idx + 1 }}</td>
+                      <td>{{ co['coCode'] }}</td>
+                      <td class="font-weight-bold">{{ co['1'].count }}</td>
+                      <td class="font-weight-bold">{{ co['1'].count / co.totalStudents | percent:'1.2':'en-US' }}</td>
+                      <td class="font-weight-bold">{{ co['2'].count }}</td>
+                      <td class="font-weight-bold">{{ co['2'].count / co.totalStudents | percent:'1.2':'en-US' }}</td>
+                      <td class="font-weight-bold">{{ co['3'].count }}</td>
+                      <td class="font-weight-bold">{{ co['3'].count / co.totalStudents | percent:'1.2':'en-US' }}</td>
+                      <td class="font-weight-bold">{{ co['4'].count }}</td>
+                      <td class="font-weight-bold">{{ co['4'].count / co.totalStudents | percent:'1.2':'en-US' }}</td>
+                      <td class="font-weight-bold">{{ co['5'].count }}</td>
+                      <td class="font-weight-bold">{{ co['5'].count / co.totalStudents | percent:'1.2':'en-US' }}</td>
+                      <td class="font-weight-bold">{{ co['totalAvg'] }}</td>
+                      <td class="font-weight-bold">{{ co['attainmentLevel'] }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row w-100 m-0" *ngIf="ciaAttainment.length !== 0">
+          <div class="col-12 mt-2 mt-sm-0 p-1">
+            <div class="d-flex flex-column">
+              <h5 class="m-0 mb-2">Total Attainment</h5>
+              <div class="table-responsive">
+                <table class="table table-flush text-center">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>Sr. No</th>
+                      <th>CO Code</th>
+                      <th>Direct (%)</th>
+                      <th>In-Direct (%)</th>
+                      <th>Attainment (%)</th>
+                      <th>Level</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let co of totalAttainment; index as idx">
+                      <td>{{ idx + 1 }}</td>
+                      <td>{{ co.coCode }}</td>
+                      <td class="font-weight-bold">{{ co.directAttainment | percent:'1.2':'en-US' }}</td>
+                      <td class="font-weight-bold">{{ co.indirectAttainment | percent:'1.2':'en-US' }}</td>
+                      <td class="font-weight-bold">{{ co.totalCOAttainment }}</td>
+                      <td class="font-weight-bold">{{ co.attainmentLevel }}</td>
+
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+<!--
+  
+-->

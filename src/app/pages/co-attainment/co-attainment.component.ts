@@ -23,7 +23,10 @@ export class CoAttainmentComponent implements OnInit {
   
   ciaAttainment: any[] = [];
   eseAttainment: any[] = [];
+
   totalDirectAttainment: any[] = [];
+  totalIndirectAttainment: any[] = [];
+  totalAttainment: any[] = [];
 
   constructor(
     private toast: ToastrService,
@@ -42,9 +45,7 @@ export class CoAttainmentComponent implements OnInit {
       `${environment.serverUrl}/attainments/${courseId}`,
       { headers: this.dataService.httpHeaders }
     ).toPromise()
-    .then((value) => {
-      console.log(value);
-      
+    .then((value) => {      
       this.ciaAttainment = this.calculateAttainemnt(this.formatRecord([...value.ciaMarks]));
       this.eseAttainment = this.calculateAttainemnt(this.formatRecord([...value.eseMarks]));
       this.totalDirectAttainment = CO_CODE.map((code, idx) => {
@@ -59,14 +60,83 @@ export class CoAttainmentComponent implements OnInit {
           'date': new Date()
         };
       });
-
-      console.log(this.totalDirectAttainment);
-      // let attainments: StudentAttainments[] = [ ...value.ciaMarks ];
-      // this.calculateDirectCOAttainemnt();
+      this.getSurvey(courseId);
     }, (error) => {
-      console.log(">>> error: ", error);
-      
+      // console.log(">>> error: ", error);
     })
+  }
+
+  getSurvey(courseId : string | undefined) {
+    this.httpClient.get<{ surveys : any[] }>(
+      `${environment.serverUrl}/surveys/${courseId}`,
+      { headers: this.dataService.httpHeaders }
+    )
+    .toPromise()
+    .then((value) => {
+      console.log(">>> surveys ", value);
+      let totalStudents = 8;
+      let ratings: any[] = value.surveys.map(e => [...e.rating]);      
+      let map: Map<string, any> = new Map<string, any>();
+      ratings.forEach((rate, idx) => {
+        CO_CODE.forEach((code: string) => {
+          if(map.has(code)) {
+            let rateArray: any[] = map?.get(code);            
+            rateArray?.push({...rate.filter((x: any) => x.coCode === code)[0]})
+            map.set(code, rateArray)
+          } else {
+            map.set(code, [ ...rate.filter((x: any) => x.coCode === code) ])
+          }
+        });
+      });
+
+      map.forEach((value, key) => {
+        let totalSum = 0;
+        const getLength = (idx: number) => value.filter((x: any) => x.index === idx).length || 0;
+        const getSum = (idx: number) => {
+          totalSum += (getLength(idx) * (20 * idx));
+          return {
+            index: idx,
+            count: getLength(idx),
+            totalRate: getLength(idx) * (20 * idx)
+          };
+        }
+
+        let temp = {
+          coCode: key,
+          1: getSum(1),
+          2: getSum(2),
+          3: getSum(3),
+          4: getSum(4),
+          5: getSum(5),
+          totalSum: totalSum,
+          totalAvg: totalSum / totalStudents,
+          totalStudents: totalStudents,
+        };
+        this.totalIndirectAttainment.push({ 
+          ...temp,
+          attainmentLevel: this.checkAttainment(temp.totalAvg).attainmentLevel
+        });
+      });
+      this.calculateTotalAttainment();
+    }, (error) => {
+      // console.log(error);
+      
+    });
+  }
+
+  calculateTotalAttainment() {
+    this.totalAttainment = CO_CODE.map((code, idx) => {
+      let coAttain = (0.9 * Math.round(this.totalDirectAttainment[idx]['totalAttainment'] * 100)) + (0.1 * Math.round(this.totalIndirectAttainment[idx]['totalAvg']));
+      
+      let attainmentLevel = this.checkAttainment(coAttain).attainmentLevel;
+      return {
+        coCode: code,
+        directAttainment: this.totalDirectAttainment[idx]['totalAttainment'],
+        indirectAttainment: this.totalIndirectAttainment[idx]['totalAvg'] / 100,
+        totalCOAttainment: coAttain,
+        attainmentLevel: attainmentLevel
+      };
+    });    
   }
 
   formatRecord(attainments: StudentAttainments[]) {
