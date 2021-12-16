@@ -1,8 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { CO_CODE } from 'src/app/models/constants';
+import { Course } from 'src/app/models/course';
 import { StudentAttainments } from 'src/app/models/student-attainments';
 import { DataService } from 'src/app/services/data.service';
 import { environment } from 'src/environments/environment';
@@ -28,18 +31,53 @@ export class CoAttainmentComponent implements OnInit {
   totalIndirectAttainment: any[] = [];
   totalAttainment: any[] = [];
 
+  selectedCourse?: Course;
+  benchMark: number = 0;
+  totalStudents: number = 0;
+
   constructor(
     private toast: ToastrService,
     private router: Router,
     private route: ActivatedRoute,
     private httpClient: HttpClient,
-    private dataService: DataService
+    private dataService: DataService,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
     this.title = this.router.url.replace('/', "").split("/")[1].split("-").map(e => e.toUpperCase()).join(" ");
   }
 
+  getSelectedCourse(courseObj: Course) {
+    this.selectedCourse = { ...courseObj };    
+  }
+  
+  openDirectAttainmentModal(modalRef: any) {
+    this.modalService.open(modalRef).result
+    .then((value: number) => {
+      let num = Number(value) || 0;
+      if(num > 0 && num <= 100) {
+        this.benchMark = num;        
+        this.getStudentAttainments(this.selectedCourse?._id);
+      } else {
+        this.toast.warning("Bench Mark should be greater than 0 and less than or equal to 100", "Warning");
+      } 
+    }, (error) => {});
+  }
+
+  openInDirectAttainmentModal(modalRef: any) {
+    this.modalService.open(modalRef).result
+    .then((value: number) => {
+      let num = Number(value) || 0;
+      if(num > 0) {
+        this.totalStudents = num;        
+        this.getSurvey(this.selectedCourse?._id);
+      } else {
+        this.toast.warning("Value should be greater than 0", "Warning");
+      } 
+    }, (error) => {});
+  }
+ 
   getStudentAttainments(courseId: string | undefined) {
     this.httpClient.get<{ ciaMarks: StudentAttainments[], eseMarks: StudentAttainments[] }>(
       `${environment.serverUrl}/attainments/${courseId}`,
@@ -60,68 +98,9 @@ export class CoAttainmentComponent implements OnInit {
           'date': new Date()
         };
       });
-      this.getSurvey(courseId);
     }, (error) => {
       // console.log(">>> error: ", error);
     })
-  }
-
-  getSurvey(courseId : string | undefined) {
-    this.httpClient.get<{ surveys : any[] }>(
-      `${environment.serverUrl}/surveys/${courseId}`,
-      { headers: this.dataService.httpHeaders }
-    )
-    .toPromise()
-    .then((value) => {
-      console.log(">>> surveys ", value);
-      let totalStudents = 8;
-      let ratings: any[] = value.surveys.map(e => [...e.rating]);      
-      let map: Map<string, any> = new Map<string, any>();
-      ratings.forEach((rate, idx) => {
-        CO_CODE.forEach((code: string) => {
-          if(map.has(code)) {
-            let rateArray: any[] = map?.get(code);            
-            rateArray?.push({...rate.filter((x: any) => x.coCode === code)[0]})
-            map.set(code, rateArray)
-          } else {
-            map.set(code, [ ...rate.filter((x: any) => x.coCode === code) ])
-          }
-        });
-      });
-
-      map.forEach((value, key) => {
-        let totalSum = 0;
-        const getLength = (idx: number) => value.filter((x: any) => x.index === idx).length || 0;
-        const getSum = (idx: number) => {
-          totalSum += (getLength(idx) * (20 * idx));
-          return {
-            index: idx,
-            count: getLength(idx),
-            totalRate: getLength(idx) * (20 * idx)
-          };
-        }
-
-        let temp = {
-          coCode: key,
-          1: getSum(1),
-          2: getSum(2),
-          3: getSum(3),
-          4: getSum(4),
-          5: getSum(5),
-          totalSum: totalSum,
-          totalAvg: totalSum / totalStudents,
-          totalStudents: totalStudents,
-        };
-        this.totalIndirectAttainment.push({ 
-          ...temp,
-          attainmentLevel: this.checkAttainment(temp.totalAvg).attainmentLevel
-        });
-      });
-      this.calculateTotalAttainment();
-    }, (error) => {
-      // console.log(error);
-      
-    });
   }
 
   calculateTotalAttainment() {
@@ -136,7 +115,38 @@ export class CoAttainmentComponent implements OnInit {
         totalCOAttainment: coAttain,
         attainmentLevel: attainmentLevel
       };
-    });    
+    });  
+    
+    let tottalCoAttainmentObj = {
+      curriculumId: this.selectedCourse?.curriculumId,
+      curriculumName: this.selectedCourse?.curriculumName,
+      termId: this.selectedCourse?.termId,
+      termName: this.selectedCourse?.termName,
+      termNo: this.selectedCourse?.termNo,
+      courseTitle: this.selectedCourse?.courseTitle,
+      courseCode: this.selectedCourse?.courseCode,
+      courseId: this.selectedCourse?._id,
+      ciaAttainment: [...this.ciaAttainment],
+      eseAttainment: [...this.eseAttainment],
+      directAttainment: [...this.totalDirectAttainment],
+      indirectAttainment: [...this.totalIndirectAttainment],
+      totalAttainment: [...this.totalAttainment]
+    };
+
+    this.httpClient.post(
+      `${environment.serverUrl}/totalcoattainments/add-total-co-attainment`,
+      { ...tottalCoAttainmentObj }, {
+      headers: this.dataService.httpHeaders
+    }).toPromise()
+      .then((value) => {
+        console.log("total co attainment >>>>>>",value);
+
+        this.toast.success("Total CO Attainment Added Successfully");
+      }, (error) => {
+        console.error(">>> error: ", error);
+
+        this.toast.error("Something went wrong!! Please Try Again...")
+      });
   }
 
   formatRecord(attainments: StudentAttainments[]) {
@@ -180,7 +190,7 @@ export class CoAttainmentComponent implements OnInit {
   }
 
   calculateAttainemnt(stdRecords: StudentAttainments[]) {
-    let benchMark = 60;
+    // let benchMark = 60;
     let coCODEs = [ ...CO_CODE ];
     let CO_Object: any = {
       "CO1": { coCode: "CO1", count: 0, maximumMarks: 0, attainment: "Not Applicable", attainmentLevel: 0, attainmentType: "Very Low", attaimentPercentage: 0 },
@@ -215,7 +225,7 @@ export class CoAttainmentComponent implements OnInit {
         let totalMarks = questions.reduce((prev, next) => prev + next.maximumMarks ,0);
         let obtainedMarks = questions.reduce((prev, next) => prev + (typeof next.obtainedMarks === 'string' ? 0 : next.obtainedMarks || 0), 0);
         let CO_AVG = Math.floor((obtainedMarks / totalMarks) * 100);
-        if (CO_AVG >= benchMark) {
+        if (CO_AVG >= this.benchMark) {
           CO_Object[code].count++;
         }
       });
@@ -234,6 +244,63 @@ export class CoAttainmentComponent implements OnInit {
       }
     });
     return Object.values(CO_Object) || [];
+  }
+  
+  getSurvey(courseId : string | undefined) {
+    this.httpClient.get<{ surveys : any[] }>(
+      `${environment.serverUrl}/surveys/${courseId}`,
+      { headers: this.dataService.httpHeaders }
+    )
+    .toPromise()
+    .then((value) => {
+      console.log(">>> surveys ", value);
+      // let totalStudents = 8;
+      let ratings: any[] = value.surveys.map(e => [...e.rating]);      
+      let map: Map<string, any> = new Map<string, any>();
+      ratings.forEach((rate, idx) => {
+        CO_CODE.forEach((code: string) => {
+          if(map.has(code)) {
+            let rateArray: any[] = map?.get(code);            
+            rateArray?.push({...rate.filter((x: any) => x.coCode === code)[0]})
+            map.set(code, rateArray)
+          } else {
+            map.set(code, [ ...rate.filter((x: any) => x.coCode === code) ])
+          }
+        });
+      });
+
+      map.forEach((value, key) => {
+        let totalSum = 0;
+        const getLength = (idx: number) => value.filter((x: any) => x.index === idx).length || 0;
+        const getSum = (idx: number) => {
+          totalSum += (getLength(idx) * (20 * idx));
+          return {
+            index: idx,
+            count: getLength(idx),
+            totalRate: getLength(idx) * (20 * idx)
+          };
+        }
+
+        let temp = {
+          coCode: key,
+          1: getSum(1),
+          2: getSum(2),
+          3: getSum(3),
+          4: getSum(4),
+          5: getSum(5),
+          totalSum: totalSum,
+          totalAvg: totalSum / this.totalStudents,
+          totalStudents: this.totalStudents,
+        };
+        this.totalIndirectAttainment.push({ 
+          ...temp,
+          attainmentLevel: this.checkAttainment(temp.totalAvg).attainmentLevel
+        });
+      });
+    }, (error) => {
+      // console.log(error);
+      
+    });
   }
 
   checkAttainment(value: number) {
