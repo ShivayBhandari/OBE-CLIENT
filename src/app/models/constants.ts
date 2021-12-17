@@ -47,3 +47,5 @@ export const BLOOM_LEVELS = {
 };
 
 export const CO_CODE = ['CO1', 'CO2', 'CO3', 'CO4', 'CO5', 'CO6'];
+export const PO_CODE = ['PO1', 'PO2', 'PO3', 'PO4', 'PO5', 'PO6', 'PO7', 'PO8', 'PO9', 'PO10', 'PO11', 'PO12'];
+export const PSO_CODE = ['PSO1', 'PSO2'];

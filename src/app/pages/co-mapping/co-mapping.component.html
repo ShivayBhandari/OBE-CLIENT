@@ -2,18 +2,52 @@
   <div class="col px-0">
     <div class="card border">
       <div class="card-header bg-white">
-        <div class="row">
-          <div class="col-12 col-sm-8">
-            <div class="d-flex flex-column">
+        <div class="row w-100">
+          <div class="col-12">
+            <div class="d-flex flex-column w-100">
               <h4 class="m-0">Course Outcome Mapping with PO/PSO</h4>
+              <div class="d-flex flex-grow-1 justify-content-between">
+                <app-filters (courseSelections)="getCourses($event)"></app-filters>
+                <button class="btn btn-primary ml-auto" (click)="saveCOPOMapping()">Save Map</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="card-body">
-        <div class="d-flex flex-olumn align-items-center justify-content-center p-4">
-          <img src="./../../../assets/empty.svg" alt="" class="img-fluid" height="256px" width="256px">
-        </div>
+      <div class="card-body" *ngIf="selectedCourse === undefined">
+        <app-no-data message="Nothing To Show!! Please Select Course First"></app-no-data>
+      </div>
+      <div class="table-responsive" *ngIf="selectedCourse !== undefined">
+        <table class="table table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th></th>
+              <th *ngFor="let po of poCodes">{{ po }}</th>
+              <th *ngFor="let pso of psoCodes">{{ pso }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let co of selectedCourseCOCodes; index as idx">
+              <td>{{ co }}</td>
+              <td *ngFor="let po of poCodes">
+                <select class="custom-select" name="poStrength" id="poStrength" (change)="addPOFormGroup(co, po, $event.target.value)">
+                  <option [value]="0">0</option>
+                  <option [value]="1">1</option>
+                  <option [value]="2">2</option>
+                  <option [value]="3">3</option>
+                </select>
+              </td>
+              <td *ngFor="let pso of psoCodes">
+                <select class="custom-select" name="psoStrength" id="psoStrength" (change)="addPOFormGroup(co, pso, $event.target.value)">
+                  <option [value]="0">0</option>
+                  <option [value]="1">1</option>
+                  <option [value]="2">2</option>
+                  <option [value]="3">3</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
