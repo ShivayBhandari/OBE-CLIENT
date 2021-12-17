@@ -33,4 +33,5 @@ export class Course {
     teeDuration: any;
     blommsDomain: any;
     state: any;
+    poMapId: any;
 }

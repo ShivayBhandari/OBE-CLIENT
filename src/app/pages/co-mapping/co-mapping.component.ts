@@ -24,6 +24,9 @@ export class CoMappingComponent implements OnInit {
   poCodes: string[] = [];
   psoCodes: string[] = [];
 
+  selectedPO: any;
+  enableSelects: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private httpClient: HttpClient,
@@ -45,13 +48,35 @@ export class CoMappingComponent implements OnInit {
     .then((res) => {
       this.selectedCourseCOS = res.coursesCO.map(e => e);
       this.selectedCourseCOCodes = res.coursesCO.map(e => e.coCode?.toUpperCase() || "");
-      this.initialiseFormGroup();      
+      this.initialiseFormGroup(this.selectedCourse.poMapId || "");      
+      this.getPOMap();
     }, (error) => { });
   }
   
-  initialiseFormGroup(){
+  getPOMap() {
+    this.httpClient.get<{ poMap: any }>(
+      `${environment.serverUrl}/co_po_mapping/${this.selectedCourse._id}/get-po-map/${this.selectedCourse.poMapId}`,
+      { headers: this.dataService.httpHeaders }
+    ).toPromise()
+    .then((res) => {
+      this.selectedPO = res.poMap;
+      this.reInitialiseForm();
+    }, (error) => { });
+  }
+
+  reInitialiseForm() {
+    this.selectedCourseCOCodes.forEach((code, idx) => {
+      Object.entries(this.selectedPO[code]).forEach(([po, stength]) => {          
+        let selectRef = <HTMLSelectElement>document.getElementById(code+po+'Strength');          
+        selectRef.value = String(stength);
+        this.addPOFormGroup(code, po, Number(stength));
+      });
+    });
+  }
+  
+  initialiseFormGroup(id: string){
     this.coMappingForm = this.fb.group({
-      _id: [""],
+      _id: [id],
       curriculumId: [this.selectedCourse.curriculumId],
       curriculumName: [this.selectedCourse.curriculumName],
       termId: [this.selectedCourse.termId],

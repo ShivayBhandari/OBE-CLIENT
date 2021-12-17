@@ -6,9 +6,12 @@
           <div class="col-12">
             <div class="d-flex flex-column w-100">
               <h4 class="m-0">Course Outcome Mapping with PO/PSO</h4>
-              <div class="d-flex flex-grow-1 justify-content-between">
+              <div class="d-flex justify-content-between">
                 <app-filters (courseSelections)="getCourses($event)"></app-filters>
-                <button class="btn btn-primary ml-auto" (click)="saveCOPOMapping()">Save Map</button>
+                <div class="d-flex justify-content-end align-items-center">
+                  <button class="btn btn-primary mr-2" (click)="enableSelects=!enableSelects">{{ enableSelects ? 'Cancel' : 'Edit' }}</button>
+                  <button class="btn btn-primary" *ngIf="enableSelects" (click)="saveCOPOMapping()">Save Map</button>
+                </div>
               </div>
             </div>
           </div>
@@ -30,7 +33,7 @@
             <tr *ngFor="let co of selectedCourseCOCodes; index as idx">
               <td>{{ co }}</td>
               <td *ngFor="let po of poCodes">
-                <select class="custom-select" name="poStrength" id="poStrength" (change)="addPOFormGroup(co, po, $event.target.value)">
+                <select class="custom-select" name="poStrength" [id]="co+po+'Strength'" [disabled]="!enableSelects" (change)="addPOFormGroup(co, po, $event.target.value)">
                   <option [value]="0">0</option>
                   <option [value]="1">1</option>
                   <option [value]="2">2</option>
@@ -38,7 +41,7 @@
                 </select>
               </td>
               <td *ngFor="let pso of psoCodes">
-                <select class="custom-select" name="psoStrength" id="psoStrength" (change)="addPOFormGroup(co, pso, $event.target.value)">
+                <select class="custom-select" name="psoStrength" [id]="co+pso+'Strength'" [disabled]="!enableSelects" (change)="addPOFormGroup(co, pso, $event.target.value)">
                   <option [value]="0">0</option>
                   <option [value]="1">1</option>
                   <option [value]="2">2</option>
