@@ -14,3 +14,8 @@ html, body {
 .active { 
   font-weight: 700;
 }
+
+.custom-select {
+  box-shadow: none !important;
+  outline: none !important;
+}

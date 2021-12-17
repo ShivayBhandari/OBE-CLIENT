@@ -1,8 +1,8 @@
 <div class="container-fluid mt-2">
   <div class="row">
     <div class="col">
-      <div class="card border">
-        <div class="card-header bg-white">
+      <div class="card ">
+        <div class="card-header bg-white border-0">
           <div class="row">
             <div class="col-12 col-sm-6">
               <div class="d-flex flex-column">
@@ -10,14 +10,22 @@
                 <app-filters (courseSelections)="courseSelection($event)"></app-filters>
               </div>
             </div>
-            <div class="col-12 col-sm-6">
-              <div class="d-flex flex-column justify-content-end align-items-end" style="height: 100%;">
-                <button class="btn btn-primary d-flex align-items-center" (click)="openAssessmentModal(assessmentModal)">
-                  <span class="material-icons mr-1">add</span>
-                  Add Assessment
-                </button>
-              </div>
-            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col">
+      <div class="card">
+        <div class="card-header bg-white border-0">
+          <div class="d-flex justify-content-between">
+            <h4>Direct Assessment</h4>
+            <!-- <button class="btn btn-primary d-flex align-items-center" (click)="openAssessmentModal(assessmentModal)">
+              <span class="material-icons mr-1">add</span>
+              Add Assessment
+            </button> -->
           </div>
         </div>
         <div class="card-body" *ngIf="assessments?.length === 0">
@@ -59,6 +67,22 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col">
+      <div class="card">
+        <div class="card-header bg-white border-0">
+          <div class="d-flex justify-content-between">
+            <h4>In-Direct Survey</h4>
+            <button class="btn btn-primary d-flex align-items-center">
+              <span class="material-icons mr-1">add</span>
+              Add Assessment
+            </button>
+          </div>
         </div>
       </div>
     </div>

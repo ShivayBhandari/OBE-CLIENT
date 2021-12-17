@@ -93,6 +93,8 @@ export class CourseOutcomeComponent implements OnInit, OnDestroy {
       courseId: [this.courseModel?._id],
       coCode: [coObj?.coCode || null, Validators.required],
       coType: [ coObj?.coType || this.selectedCOType ],
+      classHrs: [ coObj?.classHrs || this.selectedCOType || 0 ],
+      labHrs: [ coObj?.labHrs || this.selectedCOType || 0 ],
       coCodeStatement: [coObj?.coCodeStatement || null, Validators.required],
       deliveryMethod: [coObj?.deliveryMethod || null, Validators.required],
       cognitiveDomain: this.fb.array(coObj?.cognitiveDomain?.map(e => this.fb.control(e)) || [], [Validators.required, Validators.minLength(1)])
