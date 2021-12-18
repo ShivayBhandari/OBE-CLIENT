@@ -1,4 +1,4 @@
-.custom-select:disabled {
-  font-weight: 600;
-  color: #000;
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
 }

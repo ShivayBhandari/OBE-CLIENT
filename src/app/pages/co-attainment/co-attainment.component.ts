@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { CO_CODE } from 'src/app/models/constants';
@@ -9,7 +8,6 @@ import { Course } from 'src/app/models/course';
 import { StudentAttainments } from 'src/app/models/student-attainments';
 import { DataService } from 'src/app/services/data.service';
 import { environment } from 'src/environments/environment';
-import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-co-attainment',
@@ -38,7 +36,6 @@ export class CoAttainmentComponent implements OnInit {
   constructor(
     private toast: ToastrService,
     private router: Router,
-    private route: ActivatedRoute,
     private httpClient: HttpClient,
     private dataService: DataService,
     private modalService: NgbModal
@@ -105,13 +102,15 @@ export class CoAttainmentComponent implements OnInit {
 
   calculateTotalAttainment() {
     this.totalAttainment = CO_CODE.map((code, idx) => {
-      let coAttain = (0.9 * Math.round(this.totalDirectAttainment[idx]['totalAttainment'] * 100)) + (0.1 * Math.round(this.totalIndirectAttainment[idx]['totalAvg']));
-      
+      let directTA = this.totalDirectAttainment[idx]['totalAttainment'] || 0;
+      let indirectTA = this.totalIndirectAttainment.length !== 0 ?  this.totalIndirectAttainment[idx]['totalAvg'] || 0 : 0;  
+
+      let coAttain = (0.9 * Math.round(directTA * 100)) + (0.1 * (Math.round(indirectTA)));
       let attainmentLevel = this.checkAttainment(coAttain).attainmentLevel;
       return {
         coCode: code,
-        directAttainment: this.totalDirectAttainment[idx]['totalAttainment'],
-        indirectAttainment: this.totalIndirectAttainment[idx]['totalAvg'] / 100,
+        directAttainment: directTA,
+        indirectAttainment: (indirectTA / 100) || 0,
         totalCOAttainment: coAttain,
         attainmentLevel: attainmentLevel
       };
@@ -129,7 +128,7 @@ export class CoAttainmentComponent implements OnInit {
       ciaAttainment: [...this.ciaAttainment],
       eseAttainment: [...this.eseAttainment],
       directAttainment: [...this.totalDirectAttainment],
-      indirectAttainment: [...this.totalIndirectAttainment],
+      indirectAttainment: [...this.totalIndirectAttainment] || [],
       totalAttainment: [...this.totalAttainment]
     };
 
