@@ -14,7 +14,7 @@ export class PoAttainmentComponent implements OnInit {
 
   selectedCourse: Course;
   poMap: any;
-  totalAttainment: any;
+  totalPOPSOAttainment: any[] = [];
 
   constructor(
     private httpClient: HttpClient,
@@ -30,9 +30,7 @@ export class PoAttainmentComponent implements OnInit {
       `${environment.serverUrl}/co_po_mapping/${this.selectedCourse._id}/get-po-map/${this.selectedCourse.poMapId}`,
       { headers: this.dataService.httpHeaders }
     ).toPromise()
-    .then((res) => {
-      console.log(res);
-      
+    .then((res) => {   
       let coHrs: any = {};
       res.cos.forEach((code, idx) => {
         let key = code.coCode || "";
@@ -43,14 +41,10 @@ export class PoAttainmentComponent implements OnInit {
           labHrs: code.labHrs,
           coAvg: coAVg || 0
         }
-      });     
-      console.log(coHrs);
-      
+      });      
       let totalCOHrs = res.cos.reduce((prev, next) => prev + ((next.classHrs || 0) + (next.labHrs || 0)), 0);
       let poKeys = Object.keys(res.poMap).filter(x => RegExp(/[PO]/g).test(x));
-      console.log(poKeys);
-
-      let poMapStrength = poKeys.map((key, poIdx) => {
+      this.totalPOPSOAttainment = poKeys.map((key, poIdx) => {
         let poArray = Array.from(res.poMap[key]);
         let totalHrs = poArray.reduce((prev, next) => prev + (coHrs[String(next)].classHrs + coHrs[String(next)].labHrs), 0);
         let sessionAvg = Number(totalHrs) / totalCOHrs;
@@ -59,17 +53,15 @@ export class PoAttainmentComponent implements OnInit {
         let coSumAvg = Number(poArray.reduce((prev, next) => prev + coHrs[String(next)].coAvg, 0)) / poArray.length;
         let attainment = (mappingStrength / 3) * coSumAvg;
         return {
-          "key": key,
+          "poKey": key,
+          "coArray": poArray,
           "totalHrs": totalHrs,
           "totalCOHrs": totalCOHrs,
           "sessionAvg": sessionAvg,
           "mappingStrength": mappingStrength,
-          "coSumAvg": coSumAvg,
           "attainment": attainment
         }
-      });
-      console.log(poMapStrength);
-      
+      });     
       
     }, (error) => { });
   }

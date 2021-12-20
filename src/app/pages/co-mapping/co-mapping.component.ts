@@ -65,13 +65,14 @@ export class CoMappingComponent implements OnInit {
   }
 
   reInitialiseForm() {
-    // this.selectedCourseCOCodes.forEach((code, idx) => {
-    //   Object.assign([], this.selectedPO[code]).forEach((po: string, index: number) => {          
-    //     let selectRef = <HTMLInputElement>document.getElementById(code+po+'Strength');          
-    //     selectRef.checked = true;
-    //     this.addPOFormGroup(code, po);
-    //   });
-    // });
+    let poKeys = Object.keys(this.selectedPO).filter(x => RegExp(/[PO]/g).test(x));
+    poKeys.forEach((poKey, idx) => {
+      Object.assign([], this.selectedPO[poKey]).forEach((code: string, index: number) => {          
+        let selectRef = <HTMLInputElement>document.getElementById(code+poKey+'Strength');          
+        selectRef.checked = true;
+        this.addPOFormGroup(code, poKey);
+      });
+    })
   }
   
   initialiseFormGroup(){
@@ -85,11 +86,7 @@ export class CoMappingComponent implements OnInit {
       courseTitle: [this.selectedCourse.courseTitle],
       courseCode: [this.selectedCourse.courseCode],
       courseId: [this.selectedCourse._id],
-    });
-
-    // this.selectedCourseCOCodes.forEach((code, index) => {
-    //   this.coMappingForm.addControl(code, this.fb.array([]))
-    // });    
+    });   
   }
 
   addPOFormGroup(coCode: string, poCode: string) {
