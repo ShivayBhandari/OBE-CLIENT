@@ -6,12 +6,14 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ImportsMarksComponent } from '../../pages/imports-marks/imports-marks.component';
 import { CoAttainmentComponent } from '../../pages/co-attainment/co-attainment.component';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { PoAttainmentComponent } from '../../pages/po-attainment/po-attainment.component';
 
 
 @NgModule({
   declarations: [
     ImportsMarksComponent,
-    CoAttainmentComponent
+    CoAttainmentComponent,
+    PoAttainmentComponent
   ],
   imports: [
     CommonModule,

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PO_CODE, PSO_CODE } from 'src/app/models/constants';
 import { Course } from 'src/app/models/course';
@@ -48,7 +48,7 @@ export class CoMappingComponent implements OnInit {
     .then((res) => {
       this.selectedCourseCOS = res.coursesCO.map(e => e);
       this.selectedCourseCOCodes = res.coursesCO.map(e => e.coCode?.toUpperCase() || "");
-      this.initialiseFormGroup(this.selectedCourse.poMapId || "");      
+      this.initialiseFormGroup();      
       this.getPOMap();
     }, (error) => { });
   }
@@ -65,18 +65,19 @@ export class CoMappingComponent implements OnInit {
   }
 
   reInitialiseForm() {
-    this.selectedCourseCOCodes.forEach((code, idx) => {
-      Object.entries(this.selectedPO[code]).forEach(([po, stength]) => {          
-        let selectRef = <HTMLSelectElement>document.getElementById(code+po+'Strength');          
-        selectRef.value = String(stength);
-        this.addPOFormGroup(code, po, Number(stength));
+    let poKeys = Object.keys(this.selectedPO).filter(x => RegExp(/[PO]/g).test(x));
+    poKeys.forEach((poKey, idx) => {
+      Object.assign([], this.selectedPO[poKey]).forEach((code: string, index: number) => {          
+        let selectRef = <HTMLInputElement>document.getElementById(code+poKey+'Strength');          
+        selectRef.checked = true;
+        this.addPOFormGroup(code, poKey);
       });
-    });
+    })
   }
   
-  initialiseFormGroup(id: string){
+  initialiseFormGroup(){
     this.coMappingForm = this.fb.group({
-      _id: [id],
+      _id: [this.selectedCourse.poMapId || ""],
       curriculumId: [this.selectedCourse.curriculumId],
       curriculumName: [this.selectedCourse.curriculumName],
       termId: [this.selectedCourse.termId],
@@ -85,24 +86,27 @@ export class CoMappingComponent implements OnInit {
       courseTitle: [this.selectedCourse.courseTitle],
       courseCode: [this.selectedCourse.courseCode],
       courseId: [this.selectedCourse._id],
-    });
-
-    this.selectedCourseCOCodes.forEach((code, index) => {
-      this.coMappingForm.addControl(code, this.fb.group({}))
-    });    
+    });   
   }
 
-  addPOFormGroup(coCode: string, poCode: string, strength: number) {
-    let coFormGroup: FormGroup = this.coMappingForm.get(coCode) as FormGroup;
-    if(coFormGroup.contains(poCode)) {
-      if(Number(strength) !== 0) {
-        coFormGroup.setControl(poCode, this.fb.control(Number(strength)));
+  addPOFormGroup(coCode: string, poCode: string) {
+    if(this.coMappingForm.contains(poCode)) {
+      let coFormArray: FormArray = this.coMappingForm.get(poCode) as FormArray;
+      if(coFormArray.value.includes(coCode)) {
+        let idx: number = coFormArray.controls.findIndex((x: any) => x === coCode)
+        if(coFormArray.length > 1) {
+          coFormArray.removeAt(idx);
+        } else {
+          this.coMappingForm.removeControl(poCode)
+        }
       } else {
-        coFormGroup.removeControl(poCode);
-      }
+        coFormArray.push(this.fb.control(coCode))
+      }     
     } else {
-      coFormGroup.addControl(poCode, this.fb.control(Number(strength)))
-    }    
+      this.coMappingForm.addControl(poCode, this.fb.array([
+        this.fb.control(coCode)
+      ]))
+    }   
   }
 
   saveCOPOMapping() {
