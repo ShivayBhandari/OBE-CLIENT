@@ -46,64 +46,67 @@ export class CoAttainmentComponent implements OnInit {
   }
 
   getSelectedCourse(courseObj: Course) {
-    this.selectedCourse = { ...courseObj };    
+    this.selectedCourse = { ...courseObj };
   }
-  
+
   openDirectAttainmentModal(modalRef: any) {
     this.modalService.open(modalRef).result
-    .then((value: number) => {
-      let num = Number(value) || 0;
-      if(num > 0 && num <= 100) {
-        this.benchMark = num;        
-        this.getStudentAttainments(this.selectedCourse?._id);
-      } else {
-        this.toast.warning("Bench Mark should be greater than 0 and less than or equal to 100", "Warning");
-      } 
-    }, (error) => {});
+      .then((value: number) => {
+        let num = Number(value) || 0;
+        if (num > 0 && num <= 100) {
+          this.benchMark = num;
+          this.getStudentAttainments(this.selectedCourse?._id);
+        } else {
+          this.toast.warning("Bench Mark should be greater than 0 and less than or equal to 100", "Warning");
+        }
+      }, (error) => { });
   }
 
   openInDirectAttainmentModal(modalRef: any) {
     this.modalService.open(modalRef).result
-    .then((value: number) => {
-      let num = Number(value) || 0;
-      if(num > 0) {
-        this.totalStudents = num;        
-        this.getSurvey(this.selectedCourse?._id);
-      } else {
-        this.toast.warning("Value should be greater than 0", "Warning");
-      } 
-    }, (error) => {});
+      .then((value: number) => {
+        let num = Number(value) || 0;
+        if (num > 0) {
+          this.totalStudents = num;
+          this.getSurvey(this.selectedCourse?._id);
+        } else {
+          this.toast.warning("Value should be greater than 0", "Warning");
+        }
+      }, (error) => { });
   }
- 
+
   getStudentAttainments(courseId: string | undefined) {
     this.httpClient.get<{ ciaMarks: StudentAttainments[], eseMarks: StudentAttainments[] }>(
       `${environment.serverUrl}/attainments/${this.selectedCourse?._id}`,
       { headers: this.dataService.httpHeaders }
     ).toPromise()
-    .then((value) => {      
-      this.ciaAttainment = this.calculateAttainemnt(this.formatRecord([...value.ciaMarks]));
-      this.eseAttainment = this.calculateAttainemnt(this.formatRecord([...value.eseMarks]));
-      this.totalDirectAttainment = CO_CODE.map((code, idx) => {
-        let coAttain = (0.4 * Math.round(this.ciaAttainment[idx]['attaimentPercentage'] * 100)) + (0.6 * Math.round(this.eseAttainment[idx]['attaimentPercentage'] * 100));
-        let attainmentObj = this.checkAttainment(coAttain);
-        return {
-          'coCode': code,
-          'ciaPercentage': this.ciaAttainment[idx]['attaimentPercentage'],
-          'esePercentage': this.eseAttainment[idx]['attaimentPercentage'],
-          'totalAttainment': coAttain / 100,
-          'attainmentLevel': attainmentObj.attainmentLevel,
-          'date': new Date()
-        };
-      });
-    }, (error) => {
-      // console.log(">>> error: ", error);
-    })
+      .then((value) => {
+        this.ciaAttainment = this.calculateAttainemnt(this.formatRecord([...value.ciaMarks]));
+        this.eseAttainment = this.calculateAttainemnt(this.formatRecord([...value.eseMarks]));
+        this.totalDirectAttainment = CO_CODE.map((code, idx) => {
+          let coAttain = this.ciaAttainment[idx]['attaimentPercentage'];
+          if(this.eseAttainment[idx]['attaimentPercentage'] !== 0) {
+            coAttain = (0.4 * Math.round(this.ciaAttainment[idx]['attaimentPercentage'] * 100)) + (0.6 * Math.round(this.eseAttainment[idx]['attaimentPercentage'] * 100));
+          }
+          let attainmentObj = this.checkAttainment(coAttain);
+          return {
+            'coCode': code,
+            'ciaPercentage': this.ciaAttainment[idx]['attaimentPercentage'],
+            'esePercentage': this.eseAttainment[idx]['attaimentPercentage'],
+            'totalAttainment': coAttain,
+            'attainmentLevel': attainmentObj.attainmentLevel,
+            'date': new Date()
+          };
+        });
+      }, (error) => {
+        // console.log(">>> error: ", error);
+      })
   }
 
   calculateTotalAttainment() {
     this.totalAttainment = CO_CODE.map((code, idx) => {
       let directTA = this.totalDirectAttainment[idx]['totalAttainment'] || 0;
-      let indirectTA = this.totalIndirectAttainment.length !== 0 ?  this.totalIndirectAttainment[idx]['totalAvg'] || 0 : 0;  
+      let indirectTA = this.totalIndirectAttainment.length !== 0 ? this.totalIndirectAttainment[idx]['totalAvg'] || 0 : 0;
 
       let coAttain = (0.9 * Math.round(directTA * 100)) + (0.1 * (Math.round(indirectTA)));
       let attainmentLevel = this.checkAttainment(coAttain).attainmentLevel;
@@ -114,8 +117,8 @@ export class CoAttainmentComponent implements OnInit {
         totalCOAttainment: coAttain,
         attainmentLevel: attainmentLevel
       };
-    });  
-    
+    });
+
     let tottalCoAttainmentObj = {
       curriculumId: this.selectedCourse?.curriculumId,
       curriculumName: this.selectedCourse?.curriculumName,
@@ -138,8 +141,6 @@ export class CoAttainmentComponent implements OnInit {
       headers: this.dataService.httpHeaders
     }).toPromise()
       .then((value) => {
-        console.log("total co attainment >>>>>>",value);
-
         this.toast.success("Total CO Attainment Added Successfully");
       }, (error) => {
         console.error(">>> error: ", error);
@@ -190,7 +191,7 @@ export class CoAttainmentComponent implements OnInit {
 
   calculateAttainemnt(stdRecords: StudentAttainments[]) {
     // let benchMark = 60;
-    let coCODEs = [ ...CO_CODE ];
+    let coCODEs = [...CO_CODE];
     let CO_Object: any = {
       "CO1": { coCode: "CO1", count: 0, maximumMarks: 0, attainment: "Not Applicable", attainmentLevel: 0, attainmentType: "Very Low", attaimentPercentage: 0 },
       "CO2": { coCode: "CO2", count: 0, maximumMarks: 0, attainment: "Not Applicable", attainmentLevel: 0, attainmentType: "Very Low", attaimentPercentage: 0 },
@@ -244,62 +245,62 @@ export class CoAttainmentComponent implements OnInit {
     });
     return Object.values(CO_Object) || [];
   }
-  
-  getSurvey(courseId : string | undefined) {
-    this.httpClient.get<{ surveys : any[] }>(
+
+  getSurvey(courseId: string | undefined) {
+    this.httpClient.get<{ surveys: any[] }>(
       `${environment.serverUrl}/surveys/${courseId}`,
       { headers: this.dataService.httpHeaders }
     )
-    .toPromise()
-    .then((value) => {
-      console.log(">>> surveys ", value);
-      // let totalStudents = 8;
-      let ratings: any[] = value.surveys.map(e => [...e.rating]);      
-      let map: Map<string, any> = new Map<string, any>();
-      ratings.forEach((rate, idx) => {
-        CO_CODE.forEach((code: string) => {
-          if(map.has(code)) {
-            let rateArray: any[] = map?.get(code);            
-            rateArray?.push({...rate.filter((x: any) => x.coCode === code)[0]})
-            map.set(code, rateArray)
-          } else {
-            map.set(code, [ ...rate.filter((x: any) => x.coCode === code) ])
+      .toPromise()
+      .then((value) => {
+        console.log(">>> surveys ", value);
+        // let totalStudents = 8;
+        let ratings: any[] = value.surveys.map(e => [...e.rating]);
+        let map: Map<string, any> = new Map<string, any>();
+        ratings.forEach((rate, idx) => {
+          CO_CODE.forEach((code: string) => {
+            if (map.has(code)) {
+              let rateArray: any[] = map?.get(code);
+              rateArray?.push({ ...rate.filter((x: any) => x.coCode === code)[0] })
+              map.set(code, rateArray)
+            } else {
+              map.set(code, [...rate.filter((x: any) => x.coCode === code)])
+            }
+          });
+        });
+
+        map.forEach((value, key) => {
+          let totalSum = 0;
+          const getLength = (idx: number) => value.filter((x: any) => x.index === idx).length || 0;
+          const getSum = (idx: number) => {
+            totalSum += (getLength(idx) * (20 * idx));
+            return {
+              index: idx,
+              count: getLength(idx),
+              totalRate: getLength(idx) * (20 * idx)
+            };
           }
-        });
-      });
 
-      map.forEach((value, key) => {
-        let totalSum = 0;
-        const getLength = (idx: number) => value.filter((x: any) => x.index === idx).length || 0;
-        const getSum = (idx: number) => {
-          totalSum += (getLength(idx) * (20 * idx));
-          return {
-            index: idx,
-            count: getLength(idx),
-            totalRate: getLength(idx) * (20 * idx)
+          let temp = {
+            coCode: key,
+            1: getSum(1),
+            2: getSum(2),
+            3: getSum(3),
+            4: getSum(4),
+            5: getSum(5),
+            totalSum: totalSum,
+            totalAvg: totalSum / this.totalStudents,
+            totalStudents: this.totalStudents,
           };
-        }
-
-        let temp = {
-          coCode: key,
-          1: getSum(1),
-          2: getSum(2),
-          3: getSum(3),
-          4: getSum(4),
-          5: getSum(5),
-          totalSum: totalSum,
-          totalAvg: totalSum / this.totalStudents,
-          totalStudents: this.totalStudents,
-        };
-        this.totalIndirectAttainment.push({ 
-          ...temp,
-          attainmentLevel: this.checkAttainment(temp.totalAvg).attainmentLevel
+          this.totalIndirectAttainment.push({
+            ...temp,
+            attainmentLevel: this.checkAttainment(temp.totalAvg).attainmentLevel
+          });
         });
+      }, (error) => {
+        // console.log(error);
+
       });
-    }, (error) => {
-      // console.log(error);
-      
-    });
   }
 
   checkAttainment(value: number) {

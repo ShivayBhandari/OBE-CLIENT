@@ -22,10 +22,10 @@
         <div class="card-header bg-white border-0">
           <div class="d-flex justify-content-between">
             <h4>Direct Assessment</h4>
-            <!-- <button class="btn btn-primary d-flex align-items-center" (click)="openAssessmentModal(assessmentModal)">
+            <button class="btn btn-primary d-flex align-items-center" [disabled]="selectedCourse === null" (click)="openAssessmentModal(assessmentModal)">
               <span class="material-icons mr-1">add</span>
               Add Assessment
-            </button> -->
+            </button>
           </div>
         </div>
         <div class="card-body" *ngIf="assessments?.length === 0">
@@ -71,7 +71,7 @@
       </div>
     </div>
   </div>
-
+<!-- 
   <div class="row mt-2">
     <div class="col">
       <div class="card">
@@ -87,7 +87,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <ng-template let-modal #assessmentModal>
   <div class="modal-header border-0">

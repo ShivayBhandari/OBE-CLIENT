@@ -45,7 +45,7 @@
               <th>CO Code</th>
               <th>CO Statement</th>
               <th>Delivery Methods</th>
-              <th>Bloom Levels</th>
+              <th>Bloom Taxonomy Levels</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -100,7 +100,7 @@
           class="form-control"></textarea>
       </div>
       <div class="form-group col-12 d-flex flex-column">
-        <label class="text-sm text-muted">Bloom Levels</label>
+        <label class="text-sm text-muted">Bloom Taxonomy Levels</label>
         <div class="btn-group btn-group-toggle" ngbRadioGroup>
           <label ngbButtonLabel class="btn-sm {{ getCheckedValue(key) ? 'btn-primary' : 'btn-outline-primary' }}" *ngFor="let key of bloomLevelKeys; index as idx" >
             <input ngbButton type="checkbox" (change)="onChange(key)">
