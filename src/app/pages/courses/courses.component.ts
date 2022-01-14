@@ -68,11 +68,11 @@ export class CoursesComponent implements OnInit {
       this.courseForm = this.fb.group({
         curriculum: [null],
         term: [null],
-        courseDomain: [null],
+        // courseDomain: [null],
         typeOfCourse: [null], //Theory, Theory with Lab, Lab/Project Works/Others
         courseCode: [null],
         courseTitle: [null],
-        courseAcronym: [null],
+        // courseAcronym: [null],
         theoryCredits: [null],
         tutorialCredits: [null],
         practicalCredits: [null],
@@ -86,7 +86,7 @@ export class CoursesComponent implements OnInit {
         courseOwnerId: [this.userModel._id],
         reviewerDepartment: [this.userModel.department],
         courseReviewer: [null],
-        lastDateToReview: [null],
+        // lastDateToReview: [null],
         totalCourseConatactHours: [null],
         totalCiaMarks: [null],
         totalMidTermMarks: [null],
@@ -94,7 +94,7 @@ export class CoursesComponent implements OnInit {
         totalAttendanceMarks: [null],
         totalMarks: [null],
         teeDuration: [null],
-        blommsDomain: [null],
+        // blommsDomain: [null],
         state: [true]
       });
     } else {
@@ -107,11 +107,11 @@ export class CoursesComponent implements OnInit {
         _id: [courseObj._id],
         curriculum: [currObj],
         term: [termObj],
-        courseDomain: [courseObj.courseDomain],
+        // courseDomain: [courseObj.courseDomain],
         typeOfCourse: [courseObj.typeOfCourse], //Theory, Theory with Lab, Lab/Project Works/Others
         courseCode: [courseObj.courseCode],
         courseTitle: [courseObj.courseTitle],
-        courseAcronym: [courseObj.courseAcronym],
+        // courseAcronym: [courseObj.courseAcronym],
         theoryCredits: [courseObj.theoryCredits],
         tutorialCredits: [courseObj.tutorialCredits],
         practicalCredits: [courseObj.practicalCredits],
@@ -125,7 +125,7 @@ export class CoursesComponent implements OnInit {
         courseOwnerId: [this.userModel._id],
         reviewerDepartment: [this.userModel.department],
         courseReviewer: [courseObj.courseReviewer],
-        lastDateToReview: [new DatePipe('en-US').transform(courseObj.lastDateToReview, 'yyyy-MM-dd')],
+        // lastDateToReview: [new DatePipe('en-US').transform(courseObj.lastDateToReview, 'yyyy-MM-dd')],
         totalCourseConatactHours: [courseObj.totalCourseConatactHours],
         totalCiaMarks: [courseObj.totalCiaMarks],
         totalMidTermMarks: [courseObj.totalMidTermMarks],
@@ -133,7 +133,7 @@ export class CoursesComponent implements OnInit {
         totalAttendanceMarks: [courseObj.totalAttendanceMarks],
         totalMarks: [courseObj.totalMarks],
         teeDuration: [courseObj.teeDuration],
-        blommsDomain: [courseObj.blommsDomain],
+        // blommsDomain: [courseObj.blommsDomain],
         state: [courseObj.state]
       });
       

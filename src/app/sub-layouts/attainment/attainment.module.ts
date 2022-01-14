@@ -7,13 +7,15 @@ import { ImportsMarksComponent } from '../../pages/imports-marks/imports-marks.c
 import { CoAttainmentComponent } from '../../pages/co-attainment/co-attainment.component';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { PoAttainmentComponent } from '../../pages/po-attainment/po-attainment.component';
+import { AttainmentGapComponent } from '../../pages/attainment-gap/attainment-gap.component';
 
 
 @NgModule({
   declarations: [
     ImportsMarksComponent,
     CoAttainmentComponent,
-    PoAttainmentComponent
+    PoAttainmentComponent,
+    AttainmentGapComponent
   ],
   imports: [
     CommonModule,
