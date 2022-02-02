@@ -8,13 +8,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CourseOutcomeComponent } from '../../pages/course-outcome/course-outcome.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { BatchesComponent } from '../../pages/batches/batches.component';
 
 
 @NgModule({
   declarations: [
     CoursesComponent,
     CoMappingComponent,
-    CourseOutcomeComponent
+    CourseOutcomeComponent,
+    BatchesComponent
   ],
   imports: [
     CommonModule,
