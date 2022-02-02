@@ -9,6 +9,7 @@ export interface RouteInfo {
 }
 
 export const ROUTES: RouteInfo[] = [
+  { path: 'batches', title: 'Batches', icon: 'book', class: '', children: [] },
   { path: 'courses', title: 'Courses', icon: 'book', class: '', children: [] },
   { path: 'co-mapping', title: 'Mapped CO\'s with PO\'s and PSO\'s ', icon: 'map', class: '', children: [] },
 ];

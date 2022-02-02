@@ -172,7 +172,7 @@ export class CoursesComponent implements OnInit {
       this.httpClient.post<{ response: Course, error: any }>(`${environment.serverUrl}/courses/add-course`, { ...courseObj })
         .toPromise()
         .then((value) => {
-          // console.log(":>>> Value: ", value);
+          
           this.loader = false;
           this.modalService.dismissAll();
           this.toast.success("Course Added Successfully")

@@ -54,7 +54,8 @@
                   (click)="openCourseModal(courseModal, course)">
                   Update
                 </button>
-                <button type="button" class="btn btn-danger btn-sm mr-1 mb-1" (click)="deleteCourse(deleteModal, course._id)">Delete</button>
+                <button type="button" class="btn btn-danger btn-sm mr-1 mb-1"
+                  (click)="deleteCourse(deleteModal, course._id)">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -252,8 +253,7 @@
     </div>
   </div>
   <div class="modal-footer border-0">
-    <button type="button" class="btn btn-sm btn-dark float-right mr-2"
-      (click)="modal.dismiss('Cross click')">
+    <button type="button" class="btn btn-sm btn-dark float-right mr-2" (click)="modal.dismiss('Cross click')">
       NO
     </button>
     <button type="submit" class="btn btn-sm btn-danger float-right mr-2" (click)="modal.close('1')">

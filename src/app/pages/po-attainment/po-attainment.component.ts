@@ -62,7 +62,7 @@ export class PoAttainmentComponent implements OnInit {
             "totalCOHrs": totalCOHrs,
             "sessionAvg": sessionAvg,
             "mappingStrength": mappingStrength,
-            "attainment": attainment
+            "attainment": attainment / 100
           }
         }
 
