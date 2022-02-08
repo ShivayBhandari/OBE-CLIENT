@@ -190,7 +190,7 @@ export class AssessmentsComponent implements OnInit {
     this.assessmentModel = assessment;
     this.surveyBool = surveyBool;
     this.modalService.open(modalRef, {
-      size: 'xl'
+      size: surveyBool ? 'lg' : 'xl'
     })
   }
 }

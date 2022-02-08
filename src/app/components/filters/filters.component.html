@@ -1,5 +1,5 @@
-<div class="row w-100 m-0 mt-2">
-  <div class="form-group col-3 px-0 m-0 mr-2">
+<div class="row w-100 m-0 mt-3">
+  <div class="form-group col px-0 m-0 mr-2">
     <select name="curriculums" id="curriculums" class="custom-select" [ngModel]="selectedCurriculum"
       (ngModelChange)="curriculumSelection($event)">
       <option [ngValue]="null">Select Curriculums</option>
@@ -8,7 +8,7 @@
       </option>
     </select>
   </div>
-  <div class="form-group col-3 px-0 m-0 mr-2">
+  <div class="form-group col px-0 m-0 mr-2">
     <select name="terms" id="terms" class="custom-select" [disabled]="terms?.length === 0"
       [ngModel]="selectedTerm" (ngModelChange)="termselection($event)">
       <option [ngValue]="null">Select terms</option>
@@ -17,7 +17,7 @@
       </option>
     </select>
   </div>
-  <div class="form-group col-3 px-0 m-0 mr-2">
+  <div class="form-group col px-0 m-0 mr-2">
     <select name="course" id="course" class="custom-select"
       [disabled]="selectedTerm === null || courses?.length === 0" [ngModel]="selectedCourse"
       (ngModelChange)="courseSelection($event)">

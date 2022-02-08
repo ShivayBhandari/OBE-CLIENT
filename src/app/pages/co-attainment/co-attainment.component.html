@@ -4,7 +4,9 @@
       <div class="card-header bg-white border-0">
         <div class="d-flex flex-column">
           <h4 class="m-0">CO Attainment</h4>
-          <app-filters (courseSelections)="getSelectedCourse($event)"></app-filters>
+          <div class="d-flex flex-row justify-content-between">
+            <app-filters (courseSelections)="getSelectedCourse($event)"></app-filters>
+          </div>
         </div>
       </div>
     </div>
@@ -158,7 +160,7 @@
                       <td class="font-weight-bold">{{ co.ciaPercentage | percent:'1.2':'en-US' }}</td>
                       <td class="font-weight-bold">{{ co.esePercentage | percent:'1.2':'en-US' }}</td>
                       <td class="font-weight-bold">{{ co.attainmentLevel }}</td>
-                      <td class="font-weight-bold">{{ co.totalAttainment }}</td>
+                      <td class="font-weight-bold">{{ co.totalAttainment }}%</td>
                       <!-- <td></td> -->
                     </tr>
                   </tbody>
@@ -218,7 +220,7 @@
               <td class="font-weight-bold">{{ co['4'].count / co.totalStudents | percent:'1.2':'en-US' }}</td>
               <td class="font-weight-bold">{{ co['5'].count }}</td>
               <td class="font-weight-bold">{{ co['5'].count / co.totalStudents | percent:'1.2':'en-US' }}</td>
-              <td class="font-weight-bold">{{ co['totalAvg'] }}</td>
+              <td class="font-weight-bold">{{ co['totalAvg'] }} %</td>
               <td class="font-weight-bold">{{ co['attainmentLevel'] }}</td>
             </tr>
           </tbody>
@@ -256,9 +258,9 @@
             <tr *ngFor="let co of totalAttainment; index as idx">
               <td>{{ idx + 1 }}</td>
               <td>{{ co.coCode }}</td>
-              <td class="font-weight-bold">{{ co.directAttainment | percent:'1.2':'en-US' }}</td>
+              <td class="font-weight-bold">{{ co.directAttainment }}%</td>
               <td class="font-weight-bold">{{ co.indirectAttainment | percent:'1.2':'en-US' }}</td>
-              <td class="font-weight-bold">{{ co.totalCOAttainment }}</td>
+              <td class="font-weight-bold">{{ co.totalCOAttainment }}%</td>
               <td class="font-weight-bold">{{ co.attainmentLevel }}</td>
             </tr>
           </tbody>

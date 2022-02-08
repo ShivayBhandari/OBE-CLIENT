@@ -2,22 +2,24 @@
   <div class="col px-0">
     <div class="card border">
       <div class="card-header bg-white">
-        <div class="row w-100">
-          <div class="col-12">
-            <div class="d-flex flex-column w-100">
-              <h4 class="m-0">Course Outcome Mapping with PO/PSO</h4>
-              <div class="d-flex justify-content-between">
-                <app-filters (courseSelections)="getCourses($event)"></app-filters>
-                <div class="d-flex justify-content-end align-items-center">
-                  <button class="btn btn-primary mr-2" (click)="enableSelects=!enableSelects">
-                    {{ enableSelects ? 'Cancel' : 'Edit' }}
-                  </button>
-                  <button class="btn btn-primary" *ngIf="enableSelects" (click)="saveCOPOMapping()">Save Map</button>
-                </div>
-              </div>
+        <div class="d-flex flex-column w-100">
+          <h4 class="m-0">Course Outcome Mapping with PO/PSO</h4>
+          <div class="d-flex justify-content-between">
+            <app-filters (courseSelections)="getCourses($event)"></app-filters>
+            <div class="d-flex justify-content-end align-items-center">
+              <button class="btn btn-primary" (click)="enableSelects=!enableSelects" [disabled]="selectedCourse === undefined" [ngClass]="{
+                'mr-2': enableSelects
+              }">
+                {{ enableSelects ? 'Cancel' : 'Edit' }}
+              </button>
+              <button class="btn btn-primary" *ngIf="enableSelects" (click)="saveCOPOMapping()">Save Map</button>
             </div>
           </div>
         </div>
+        <!-- <div class="row w-100">
+          <div class="col-12">
+          </div>
+        </div> -->
       </div>
       <div class="card-body" *ngIf="selectedCourse === undefined">
         <app-no-data message="Nothing To Show!! Please Select Course First"></app-no-data>

@@ -3,19 +3,23 @@
     <div class="card border">
       <div class="card-header bg-white">
         <div class="row">
+          <div class="col-12">
+            <h4 class="m-0 my-1">
+              <span class="text-sm text-muted">Course Outcome - </span>
+              <span class="text-dark">{{ courseModel?.courseTitle | uppercase }}</span>
+            </h4>
+          </div>
+        </div>
+        <div class="row mt-2">
           <div class="col-12 col-sm-6">
-            <div class="d-flex flex-column">
-              <h4 class="m-0">{{ courseModel?.courseTitle | titlecase }}</h4>
-              <h6 class="text-muted text-sm m-0 my-1">Course Outcome</h6>
-              <div class="d-flex flex-wrap">
-                <button class="btn btn-sm mr-1 mb-1" *ngFor="let coType of coTypes; index as idx"
-                  (click)="filterListByCOType(coType.value)" [ngClass]="{
-                    'btn-primary': selectedCOType === idx,
-                    'btn-outline-primary': selectedCOType !== idx
-                  }">
-                  {{ coType.name }}
-                </button>
-              </div>
+            <div class="d-flex flex-wrap">
+              <button class="btn btn-sm mr-1 mb-1" *ngFor="let coType of coTypes; index as idx"
+                (click)="filterListByCOType(coType.value)" [ngClass]="{
+                  'btn-primary': selectedCOType === idx,
+                  'btn-outline-primary': selectedCOType !== idx
+                }">
+                {{ coType.name }}
+              </button>
             </div>
           </div>
           <div class="col-12 col-sm-6">
@@ -46,7 +50,7 @@
               <th>CO Statement</th>
               <th>Delivery Methods</th>
               <th>Bloom Taxonomy Levels</th>
-              <th>Actions</th>
+              <th class="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -60,11 +64,11 @@
                 </p>
               </td>
               <td>
-                <button type="button" class="btn btn-primary btn-sm mr-1 mb-1"
+                <button type="button" class="btn btn-primary btn-sm w-100 mb-1"
                   (click)="openCourseOutcomeModal(courseOutcomeModal, co)">
                   Update
                 </button>
-                <button type="button" class="btn btn-danger btn-sm mr-1 mb-1" (click)="deleteCO(deleteModal, co._id)">Delete</button>
+                <button type="button" class="btn btn-danger btn-sm w-100 mb-1" (click)="deleteCO(deleteModal, co._id)">Delete</button>
               </td>
             </tr>
           </tbody>

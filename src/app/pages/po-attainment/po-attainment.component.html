@@ -4,7 +4,9 @@
       <div class="card-header bg-white border-0">
         <div class="d-flex flex-column">
           <h4 class="m-0">PO/PSO Attainment</h4>
-          <app-filters (courseSelections)="getSelectedCourse($event)"></app-filters>
+          <div class="d-flex flex-row justify-content-between">
+            <app-filters (courseSelections)="getSelectedCourse($event)"></app-filters>
+          </div>
         </div>
       </div>
       <div class="card-body" *ngIf="totalPOPSOAttainment.length === 0">

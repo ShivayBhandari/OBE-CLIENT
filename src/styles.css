@@ -19,3 +19,9 @@ html, body {
   box-shadow: none !important;
   outline: none !important;
 }
+
+.btn:focus, .btn::selection {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}

@@ -96,7 +96,7 @@
                 <th>Sr. No</th>
                 <th>Name</th>
                 <th>Type</th>
-                <th>Total Marks</th>
+                <!-- <th>Total Marks</th> -->
                 <th>Actions</th>
               </tr>
             </thead>
@@ -104,8 +104,8 @@
               <tr *ngFor="let assessment of indirectAassessments; index as idx">
                 <td>{{ idx + 1 }}</td>
                 <td>{{ assessment.assessmentName }}</td>
-                <td>{{ assessment.assessmentType }}</td>
-                <td>{{ assessment.totalMarks }}</td>
+                <td>{{ assessment.assessmentType | titlecase }}</td>
+                <!-- <td>{{ assessment.totalMarks }}</td> -->
                 <td>
                   <button type="button" class="btn btn-primary btn-sm mr-1 mb-1"
                     (click)="openViewModal(viewModal, assessment, true)">

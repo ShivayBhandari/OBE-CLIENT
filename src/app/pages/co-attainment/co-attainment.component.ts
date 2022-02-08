@@ -114,7 +114,7 @@ export class CoAttainmentComponent implements OnInit {
         coCode: code,
         directAttainment: directTA,
         indirectAttainment: (indirectTA / 100) || 0,
-        totalCOAttainment: coAttain,
+        totalCOAttainment: (coAttain / 100).toFixed(2),
         attainmentLevel: attainmentLevel
       };
     });
@@ -289,12 +289,12 @@ export class CoAttainmentComponent implements OnInit {
             4: getSum(4),
             5: getSum(5),
             totalSum: totalSum,
-            totalAvg: totalSum / response.surveys.length,
+            totalAvg: (totalSum / response.surveys.length).toFixed(2),
             totalStudents: response.surveys.length,
           };
           this.totalIndirectAttainment.push({
             ...temp,
-            attainmentLevel: this.checkAttainment(temp.totalAvg).attainmentLevel
+            attainmentLevel: this.checkAttainment(Number(temp.totalAvg)).attainmentLevel
           });
         });
       }, (error) => {
