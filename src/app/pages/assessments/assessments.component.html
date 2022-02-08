@@ -17,7 +17,7 @@
   </div>
 
   <div class="row mt-2">
-    <div class="col">
+    <div class="col-12 col-sm-6">
       <div class="card">
         <div class="card-header bg-white border-0">
           <div class="d-flex justify-content-between">
@@ -28,7 +28,7 @@
             </button>
           </div>
         </div>
-        <div class="card-body" *ngIf="assessments?.length === 0">
+        <div class="card-body" *ngIf="directAssessments?.length === 0">
           <div class="d-flex flex-column justify-content-center align-items-center p-3">
             <img src="./../../../assets/empty.svg" class="img-fluid" height="256px" width="256px" alt="No Data">
             <h4 class="mt-3">
@@ -36,7 +36,7 @@
             </h4>
           </div>
         </div>
-        <div class="table-responsive" *ngIf="assessments?.length !== 0">
+        <div class="table-responsive" *ngIf="directAssessments?.length !== 0">
           <table class="table table-flush">
             <thead class="thead-light">
               <tr>
@@ -48,18 +48,71 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let assessment of assessments; index as idx">
+              <tr *ngFor="let assessment of directAssessments; index as idx">
                 <td>{{ idx + 1 }}</td>
                 <td>{{ assessment.assessmentName }}</td>
                 <td>{{ assessment.assessmentType }}</td>
                 <td>{{ assessment.totalMarks }}</td>
                 <td>
                   <button type="button" class="btn btn-primary btn-sm mr-1 mb-1"
-                    (click)="openViewModal(viewModal, assessment)">
+                    (click)="openViewModal(viewModal, assessment, false)">
                     View Questions
                   </button>
                   <button type="button" class="btn btn-primary btn-sm mr-1 mb-1"
-                    (click)="openAssessmentModal(assessmentModal, assessment)">
+                    (click)="openAssessmentModal(assessmentModal, false, assessment)">
+                    Update
+                  </button>
+                  <button type="button" class="btn btn-danger btn-sm mr-1 mb-1" (click)="deleteAssessment(deleteModal, assessment._id)">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-6">
+      <div class="card">
+        <div class="card-header bg-white border-0">
+          <div class="d-flex justify-content-between">
+            <h4>In-Direct Survey</h4>
+            <button class="btn btn-primary d-flex align-items-center" [disabled]="selectedCourse === null" (click)="openAssessmentModal(assessmentModal, true)">
+              <span class="material-icons mr-1">add</span>
+              Add Survey
+            </button>
+          </div>
+        </div>
+        <div class="card-body" *ngIf="indirectAassessments?.length === 0">
+          <div class="d-flex flex-column justify-content-center align-items-center p-3">
+            <img src="./../../../assets/empty.svg" class="img-fluid" height="256px" width="256px" alt="No Data">
+            <h4 class="mt-3">
+              {{ selectedCourse === null ? 'Please Select Course' : 'No Assessment Added Yet' }}
+            </h4>
+          </div>
+        </div>
+        <div class="table-responsive" *ngIf="indirectAassessments?.length !== 0">
+          <table class="table table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th>Sr. No</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Total Marks</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let assessment of indirectAassessments; index as idx">
+                <td>{{ idx + 1 }}</td>
+                <td>{{ assessment.assessmentName }}</td>
+                <td>{{ assessment.assessmentType }}</td>
+                <td>{{ assessment.totalMarks }}</td>
+                <td>
+                  <button type="button" class="btn btn-primary btn-sm mr-1 mb-1"
+                    (click)="openViewModal(viewModal, assessment, true)">
+                    View Questions
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm mr-1 mb-1"
+                    (click)="openAssessmentModal(assessmentModal, true, assessment)">
                     Update
                   </button>
                   <button type="button" class="btn btn-danger btn-sm mr-1 mb-1" (click)="deleteAssessment(deleteModal, assessment._id)">Delete</button>
@@ -71,30 +124,18 @@
       </div>
     </div>
   </div>
-<!-- 
-  <div class="row mt-2">
-    <div class="col">
-      <div class="card">
-        <div class="card-header bg-white border-0">
-          <div class="d-flex justify-content-between">
-            <h4>In-Direct Survey</h4>
-            <button class="btn btn-primary d-flex align-items-center">
-              <span class="material-icons mr-1">add</span>
-              Add Assessment
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
+
+  <!-- <div class="row mt-2">
+  </div> -->
+</div>
 
 <ng-template let-modal #assessmentModal>
   <div class="modal-header border-0">
     <div class="row w-100 m-0">
       <div class="col">
         <div class="d-flex justify-content-between align-items-center">
-          <h4>Course {{ updation ? "Updation" : "Creation" }}</h4>
+          <h4 *ngIf="!surveyBool">Course {{ updation ? "Updation" : "Creation" }}</h4>
+          <h4 *ngIf="surveyBool">Survey {{ updation ? "Updation" : "Creation" }}</h4>
           <button type="button" class="close" aria-label="Close" (click)="modal.dismiss();">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -105,12 +146,12 @@
   <form [formGroup]="assessmentForm" (ngSubmit)="submitAssessmentForm(assessmentForm)">
     <div class="modal-body">
       <div class="form-group col-12">
-        <label for="coCode" class="text-sm">Assessment Name</label>
+        <label for="coCode" class="text-sm">{{ surveyBool ? 'Survey' : 'Assessment' }} Name</label>
         <input id="assessmentName" type="text" name="assessmentName" formControlName="assessmentName"
           class="form-control">
         <!-- <span *ngIf="courseOutcomeForm.get('coCode').hasError('required')" class="text-sm text-danger">Course Outcome Ccde is Required</span> -->
       </div>
-      <div class="form-group col-12">
+      <div class="form-group col-12" *ngIf="!surveyBool">
         <label for="coCodeStatement" class="text-sm">Assessment Type</label>
         <select name="assessmentType" id="assessmentType" formControlName="assessmentType" class="custom-select">
           <option [ngValue]="null">Select...</option>
@@ -153,14 +194,14 @@
                     <option value="CO6">CO6</option>
                   </select>
                 </div>
-                <div class="form-group m-0 mb-1">
+                <div class="form-group m-0 mb-1" *ngIf="!surveyBool">
                   <label>RBT Level</label>
                   <select name="bloomLevel" id="bloomLevel" formControlName="bloomLevel" class="custom-select">
                     <option [value]="null">Select</option>
                     <option *ngFor="let level of bloomLevelKeys" [ngValue]="level">{{ level }}</option>
                   </select>
                 </div>
-                <div class="form-group m-0 mb-4">
+                <div class="form-group m-0 mb-4" *ngIf="!surveyBool">
                   <label>Maximum Marks</label>
                   <input type="number" class="form-control" name="maximumMarks" id="maximumMarks"
                     formControlName="maximumMarks">
@@ -227,7 +268,7 @@
   <div class="modal-header d-flex justify-content-between align-items-center">
     <div class="d-flex flex-column">
       <h5 class="m-0 mb-1">{{ assessmentModel?.assessmentName }} Questions</h5>
-      <span>Total Marks: <strong>{{ assessmentModel.totalMarks || 0 }}</strong></span>
+      <span *ngIf="!surveyBool">Total Marks: <strong>{{ assessmentModel.totalMarks || 0 }}</strong></span>
     </div>
     <button type="button" class="close" aria-label="Close" id="closeModal" #closeModal
       (click)="modal.dismiss('Cross click')">
@@ -242,7 +283,7 @@
             <th>Sr. No</th>
             <th>CO Code</th>
             <th>Statement</th>
-            <th>Maximum Marks</th>
+            <th *ngIf="!surveyBool">Maximum Marks</th>
           </tr>
         </thead>
         <tbody>
@@ -250,12 +291,12 @@
             <td>{{ idx + 1 }}</td>
             <td>{{ question.coCode }}</td>
             <td class="text-wrap text-justify">{{ question.questionStatement }}</td>
-            <td class="text-center">{{ question.maximumMarks }}</td>
+            <td class="text-center" *ngIf="!surveyBool">{{ question.maximumMarks }}</td>
           </tr>
         </tbody>
       </table> 
     </div>
-  </div>
+  </div> 
   <div class="modal-footer">
     <button type="button" class="btn btn-sm btn-dark float-right mr-2" (click)="modal.dismiss('Cross click')">
       Close

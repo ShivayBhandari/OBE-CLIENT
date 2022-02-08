@@ -26,7 +26,6 @@
               <th>Sr. No</th>
               <th>Name</th>
               <th>Type</th>
-              <th>Total Marks</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -34,8 +33,7 @@
             <tr *ngFor="let assessment of assessments; index as idx">
               <td>{{ idx + 1 }}</td>
               <td>{{ assessment.assessmentName }}</td>
-              <td>{{ assessment.assessmentType }}</td>
-              <td>{{ assessment.totalMarks }}</td>
+              <td>{{ assessment.assessmentType | titlecase }}</td>
               <td>
                 <button type="button" class="btn btn-primary btn-sm mr-1 mb-1" (click)="downloadExcel(assessment)">
                   Download Template
@@ -63,7 +61,7 @@
   <div class="modal-header d-flex justify-content-between align-items-center">
     <div class="d-flex flex-column">
       <h5 class="m-0 mb-1">{{ selectedAssessment?.assessmentName }}</h5>
-      <span>Total Marks: <strong>{{ selectedAssessment.totalMarks || 0 }}</strong></span>
+      <span>Total Response: <strong>{{ studentAttainments.length || 0 }}</strong></span>
     </div>
     <button type="button" class="close" aria-label="Close" id="closeModal" #closeModal
       (click)="modal.dismiss('Cross click')">
@@ -80,9 +78,8 @@
             <th>URN</th>
             <th>CRN</th>
             <th *ngFor="let question of selectedAssessment.questions; index as idx" class="text-center">
-              {{ "Q" +question.questionNo }} [{{ question.maximumMarks }}]
+              {{ "Q" + (idx + 1)}} [{{ question.coCode }}]
             </th>
-            <th class="text-center">Total Obtained Marks</th>
           </tr>
         </thead>
         <tbody>
@@ -92,12 +89,11 @@
             <td>{{ std.urn }}</td>
             <td>{{ std.crn }}</td>
             <td *ngFor="let question of selectedAssessment.questions; index as idx" class="text-center" [ngClass]="{
-              'text-danger': checkStringType(std.questions[idx].obtainedMarks) || std.questions[idx].obtainedMarks === 0,
-              'font-weight-bold': checkStringType(std.questions[idx].obtainedMarks) || std.questions[idx].obtainedMarks === 0
+              'text-danger': std.rating[idx].index === 0,
+              'font-weight-bold': std.rating[idx].index === 0
             }">
-              {{ std.questions[idx].obtainedMarks }}
+              {{ std.rating[idx].index || 0 }}
             </td>
-            <td class="text-center">{{ std.totalObtainedMarks }}</td>
           </tr>
         </tbody>
       </table> 

@@ -8,6 +8,7 @@ import { CoAttainmentComponent } from '../../pages/co-attainment/co-attainment.c
 import { ComponentsModule } from 'src/app/components/components.module';
 import { PoAttainmentComponent } from '../../pages/po-attainment/po-attainment.component';
 import { AttainmentGapComponent } from '../../pages/attainment-gap/attainment-gap.component';
+import { ImportSurveyResponseComponent } from '../../pages/import-survey-response/import-survey-response.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { AttainmentGapComponent } from '../../pages/attainment-gap/attainment-ga
     ImportsMarksComponent,
     CoAttainmentComponent,
     PoAttainmentComponent,
-    AttainmentGapComponent
+    AttainmentGapComponent,
+    ImportSurveyResponseComponent
   ],
   imports: [
     CommonModule,

@@ -94,7 +94,7 @@ export class UsersComponent implements OnInit {
     let userObj: User = { ...form.value };
   
     if (!this.updation) {
-      this.httpClient.post<{ response: User, error: any }>(`${environment.serverUrl}/users/add-user`, { ...userObj })
+      this.httpClient.post<{ res: User, error: any }>(`${environment.serverUrl}/users/add-user`, { ...userObj })
         .toPromise()
         .then((value) => {
           // console.log(":>>> Value: ", value);
@@ -102,7 +102,7 @@ export class UsersComponent implements OnInit {
           this.modalService.dismissAll();
           this.toast.success("Faculty Added Successfully")
 
-          this.userList.push({ ...value.response });
+          this.userList.push({ ...value.res });
         }, (err) => {
           // console.log(">>> err: ", err);
           this.loader = false;

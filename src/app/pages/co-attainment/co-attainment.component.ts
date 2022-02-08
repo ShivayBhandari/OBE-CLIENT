@@ -62,18 +62,18 @@ export class CoAttainmentComponent implements OnInit {
       }, (error) => { });
   }
 
-  openInDirectAttainmentModal(modalRef: any) {
-    this.modalService.open(modalRef).result
-      .then((value: number) => {
-        let num = Number(value) || 0;
-        if (num > 0) {
-          this.totalStudents = num;
-          this.getSurvey(this.selectedCourse?._id);
-        } else {
-          this.toast.warning("Value should be greater than 0", "Warning");
-        }
-      }, (error) => { });
-  }
+  // openInDirectAttainmentModal(modalRef: any) {
+  //   this.modalService.open(modalRef).result
+  //     .then((value: number) => {
+  //       let num = Number(value) || 0;
+  //       if (num > 0) {
+  //         this.totalStudents = num;
+  //         this.getSurvey(this.selectedCourse?._id);
+  //       } else {
+  //         this.toast.warning("Value should be greater than 0", "Warning");
+  //       }
+  //     }, (error) => { });
+  // }
 
   getStudentAttainments(courseId: string | undefined) {
     this.httpClient.get<{ ciaMarks: StudentAttainments[], eseMarks: StudentAttainments[] }>(
@@ -246,16 +246,16 @@ export class CoAttainmentComponent implements OnInit {
     return Object.values(CO_Object) || [];
   }
 
-  getSurvey(courseId: string | undefined) {
+  getSurvey() {
     this.httpClient.get<{ surveys: any[] }>(
-      `${environment.serverUrl}/surveys/${courseId}`,
+      `${environment.serverUrl}/surveys/${this.selectedCourse?._id}`,
       { headers: this.dataService.httpHeaders }
     )
       .toPromise()
-      .then((value) => {
-        console.log(">>> surveys ", value);
+      .then((response) => {
+        console.log(">>> surveys ", response);
         // let totalStudents = 8;
-        let ratings: any[] = value.surveys.map(e => [...e.rating]);
+        let ratings: any[] = response.surveys.map(e => [...e.rating]);
         let map: Map<string, any> = new Map<string, any>();
         ratings.forEach((rate, idx) => {
           CO_CODE.forEach((code: string) => {
@@ -289,8 +289,8 @@ export class CoAttainmentComponent implements OnInit {
             4: getSum(4),
             5: getSum(5),
             totalSum: totalSum,
-            totalAvg: totalSum / this.totalStudents,
-            totalStudents: this.totalStudents,
+            totalAvg: totalSum / response.surveys.length,
+            totalStudents: response.surveys.length,
           };
           this.totalIndirectAttainment.push({
             ...temp,

@@ -34,4 +34,5 @@ export class Course {
     blommsDomain: any;
     state: any;
     poMapId: any;
+    gapId: any;
 }

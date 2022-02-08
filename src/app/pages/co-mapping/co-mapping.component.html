@@ -36,11 +36,11 @@
               <td>{{ co }}</td>
               <td *ngFor="let po of poCodes">
                 <input type="checkbox" name="poStrength" [id]="co+po+'Strength'" [disabled]="!enableSelects"
-                  (change)="addPOFormGroup(co, po)">
+                  [checked]="onCheckboxChecked(co, po)" (change)="addPOFormGroup(co, po)">
               </td>
               <td *ngFor="let pso of psoCodes">
                 <input type="checkbox" name="psoStrength" [id]="co+pso+'Strength'" [disabled]="!enableSelects"
-                  (change)="addPOFormGroup(co, pso)">
+                [checked]="onCheckboxChecked(co, pso)" (change)="addPOFormGroup(co, pso)">
               </td>
             </tr>
           </tbody>

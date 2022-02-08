@@ -24,13 +24,16 @@ export class AssessmentsComponent implements OnInit {
   loader: boolean = false;
   listSub: Subscription | undefined;
 
-  assessments: Assessments[] = [];
+  directAssessments: Assessments[] = [];
+  indirectAassessments: Assessments[] = [];
+
   assessmentModel: Assessments | null = null;
   assessmentForm: FormGroup | undefined;
   assessmentTypes: any[] = [];
 
   bloomLevelKeys: string[] = [];
   eseBool: boolean = false;
+  surveyBool: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -52,14 +55,16 @@ export class AssessmentsComponent implements OnInit {
     })
       .toPromise()
       .then((value) => {
-        this.assessments = [...value.assessments];
-        this.eseBool = this.assessments.some(x => x.assessmentType === 'ESE') ? true : false;
+        this.directAssessments = value.assessments.filter(x => x.assessmentType !== 'survey');
+        this.indirectAassessments = value.assessments.filter(x => x.assessmentType === 'survey');
+        this.eseBool = this.directAssessments.some(x => x.assessmentType === 'ESE') ? true : false;
       }, (err) => {
         console.log(">>> error: ", err);
       })
   }
 
-  initialisedForm(assessmentObj?: Assessments | undefined): void {
+  initialisedForm(assessmentObj?: Assessments | undefined, surveyBool: boolean = false): void {
+    this.surveyBool = surveyBool;
     if (assessmentObj === undefined) this.updation = false; else this.updation = true;
     this.assessmentForm = this.fb.group({
       _id: [assessmentObj?._id],
@@ -71,7 +76,7 @@ export class AssessmentsComponent implements OnInit {
       courseTitle: [this.selectedCourse?.courseTitle],
       courseId: [this.selectedCourse?._id],
       courseCode: [this.selectedCourse?.courseCode],
-      assessmentType: [assessmentObj?.assessmentType || null],
+      assessmentType: [ surveyBool ? 'survey' : assessmentObj?.assessmentType || null],
       assessmentName: [assessmentObj?.assessmentName || null],
       totalMarks: [assessmentObj?.totalMarks || null],
       questions: this.fb.array(assessmentObj?.questions?.map(e => this.initialQuestionForm(e)) || [], [Validators.required, Validators.minLength(1)]),
@@ -81,18 +86,18 @@ export class AssessmentsComponent implements OnInit {
   initialQuestionForm(questionObj?: Questions | undefined) {
     return this.fb.group({
       coCode: [questionObj?.coCode || null, Validators.required],
-      bloomLevel: [questionObj?.bloomLevel || this.bloomLevelKeys[0], Validators.required],
+      bloomLevel: [questionObj?.bloomLevel || this.bloomLevelKeys[0], !this.surveyBool && Validators.required],
       questionNo: [questionObj?.questionNo || this.getQuestionsControl().length + 1, Validators.required],
       questionStatement: [questionObj?.questionStatement || null, Validators.required],
-      maximumMarks: [questionObj?.maximumMarks || null, Validators.required]
+      maximumMarks: [questionObj?.maximumMarks || 0, !this.surveyBool &&  Validators.required]
     });
   }
 
-  openAssessmentModal(modalRef: any, assessmentObj?: Assessments | undefined) {
+  openAssessmentModal(modalRef: any, surveyBool: boolean = false, assessmentObj?: Assessments | undefined) {
     if(this.selectedCourse === null) {
       this.toast.warning("Please Select Course First...")
     } else {
-      this.initialisedForm(assessmentObj);
+      this.initialisedForm(assessmentObj, surveyBool);
       this.modalService.open(modalRef, {
         size: 'lg',
         keyboard: false,
@@ -135,7 +140,7 @@ export class AssessmentsComponent implements OnInit {
       .then((value) => {
         this.loader = false;
         this.modalService.dismissAll();
-        this.assessments?.push({ ...value.response });
+        this.directAssessments?.push({ ...value.response });
         this.toast.success("Assessment Added Successfully");
       }, (error) => {
         console.error(">>> error: ", error);
@@ -152,8 +157,8 @@ export class AssessmentsComponent implements OnInit {
       .then((value) => {
         this.loader = false;
         this.modalService.dismissAll();
-        let idx = this.assessments?.findIndex(x => x._id === value.response._id);
-        this.assessments[idx] = { ...value.response };
+        let idx = this.directAssessments?.findIndex(x => x._id === value.response._id);
+        this.directAssessments[idx] = { ...value.response };
         this.toast.success("Assessment Updated Successfully");
       }, (error) => {
         console.error(">>> error: ", error);
@@ -169,8 +174,8 @@ export class AssessmentsComponent implements OnInit {
       .toPromise()
       .then((value) => {
         this.toast.success("Course Outcome Deleted");
-        let idx = this.assessments.findIndex(x => x._id === id);
-        this.assessments.splice(idx, 1);
+        let idx = this.directAssessments.findIndex(x => x._id === id);
+        this.directAssessments.splice(idx, 1);
       }, (err) => {
         // console.log(">>> error", err);
       });
@@ -181,8 +186,9 @@ export class AssessmentsComponent implements OnInit {
     })
   }
 
-  openViewModal(modalRef: any, assessment: Assessments) {
+  openViewModal(modalRef: any, assessment: Assessments, surveyBool: boolean = false) {
     this.assessmentModel = assessment;
+    this.surveyBool = surveyBool;
     this.modalService.open(modalRef, {
       size: 'xl'
     })

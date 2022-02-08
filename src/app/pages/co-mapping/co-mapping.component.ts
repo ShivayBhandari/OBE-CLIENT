@@ -68,8 +68,6 @@ export class CoMappingComponent implements OnInit {
     let poKeys = Object.keys(this.selectedPO).filter(x => RegExp(/[PO]/g).test(x));
     poKeys.forEach((poKey, idx) => {
       Object.assign([], this.selectedPO[poKey]).forEach((code: string, index: number) => {          
-        let selectRef = <HTMLInputElement>document.getElementById(code+poKey+'Strength');          
-        selectRef.checked = true;
         this.addPOFormGroup(code, poKey);
       });
     })
@@ -107,6 +105,11 @@ export class CoMappingComponent implements OnInit {
         this.fb.control(coCode)
       ]))
     }   
+  }
+
+  onCheckboxChecked(coCode: string, poCode: string) {
+    let coFormArray: FormArray = this.coMappingForm.get(poCode) as FormArray;
+    return coFormArray !== null ? coFormArray.controls.some(x => x.value === coCode) : false;
   }
 
   saveCOPOMapping() {

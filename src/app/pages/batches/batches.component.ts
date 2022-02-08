@@ -14,20 +14,22 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-batches',
   templateUrl: './batches.component.html',
-  styleUrls: ['./batches.component.css']
+  styleUrls: ['./batches.component.css'],
 })
 export class BatchesComponent implements OnInit {
-
   batchForm: FormGroup;
   batchUpdateBool: boolean = false;
   departments: any;
   curriculums: Curriculum[] = [];
   curriculumSub: Subscription | undefined;
-  userModel: User = JSON.parse(localStorage.getItem("user") || "");
-  constructor(private modalService: NgbModal,
+  userModel: User = JSON.parse(localStorage.getItem('user') || '');
+
+  constructor(
+    private modalService: NgbModal,
     private httpClient: HttpClient,
     private toast: ToastrService,
-    private data: DataService) { }
+    private data: DataService
+  ) {}
 
   ngOnInit(): void {
     this.departments = DEPARTMENTS;
@@ -36,108 +38,114 @@ export class BatchesComponent implements OnInit {
 
   getCurriculums() {
     this.data.getCurriculums();
-    this.curriculumSub = this.data.curriculumsSub.subscribe(res => {
+    this.curriculumSub = this.data.curriculumsSub.subscribe((res) => {
       if (res.length != 0) {
         this.curriculums = res;
       }
-    })
+    });
   }
 
-  openCurriculumModel(modalRef: any, curriculumObj: any | null = null) {
+  openCurriculumModel(modalRef: any, curriculumObj: Curriculum | null = null) {
     this.modalService.open(modalRef, {
-      size: 's'
-    })
-    
-
+      size: 's',
+    });
 
     if (curriculumObj === null) {
       this.batchUpdateBool = false;
       this.batchForm = new FormGroup({
         curriculumName: new FormControl(''),
-        deptName: new FormControl(''),
-        curriculumOwner: new FormControl(this.userModel.firstName + " " + this.userModel.lastName),
+        deptName: new FormControl(this.userModel.department),
+        curriculumOwner: new FormControl(
+          this.userModel.firstName + ' ' + this.userModel.lastName
+        ),
         curriculumOwnerId: new FormControl(this.userModel._id),
       });
-    }
-    else {
+    } else {
       this.batchUpdateBool = true;
       this.batchForm = new FormGroup({
-        _id : new FormControl(curriculumObj._id),
+        _id: new FormControl(curriculumObj._id),
         curriculumName: new FormControl(curriculumObj.curriculumName),
         deptName: new FormControl(curriculumObj.deptName),
-        curriculumOwner: new FormControl(this.userModel.firstName + " " + this.userModel.lastName),
+        curriculumOwner: new FormControl(curriculumObj.curriculumOwner),
         curriculumOwnerId: new FormControl(this.userModel._id),
       });
     }
   }
 
   submitForm(form: FormGroup) {
-
     // let values = { ...form.value }
-    let curriculumObj : Curriculum | any =  { ...form.value }
-    
-    
-    if (!this.batchUpdateBool)
-    {
-      this.httpClient.post<{ response: Curriculum, error: any }>(`${environment.serverUrl}/curriculums/add-curriculum`, { ...curriculumObj })
+    let curriculumObj: Curriculum | any = { ...form.value };
+
+    if (!this.batchUpdateBool) {
+      this.httpClient
+        .post<{ response: Curriculum; error: any }>(
+          `${environment.serverUrl}/curriculums/add-curriculum`,
+          { ...curriculumObj }
+        )
         .toPromise()
-        .then((value) => {
-          console.log(":>>> Value: ", value);
+        .then(
+          (value) => {
+            console.log(':>>> Value: ', value);
 
-          this.modalService.dismissAll();
-          this.toast.success("Batch Added Successfully");
-          this.curriculums.push({ ...value.response });
+            this.modalService.dismissAll();
+            this.toast.success('Batch Added Successfully');
+            this.curriculums.push({ ...value.response });
+          },
+          (err) => {
+            console.log('>>> err: ', err);
 
-        }, (err) => {
-          console.log(">>> err: ", err);
-
-          this.toast.error(err.error.message);
-        });
+            this.toast.error(err.error.message);
+          }
+        );
       console.log(this.curriculums);
-    }
-      else {
-        this.httpClient.put<{ response: Curriculum, error: any }>(`${environment.serverUrl}/curriculums/update-curriculum/${curriculumObj._id}`, { ...curriculumObj })
+    } else {
+      this.httpClient
+        .put<{ response: Curriculum; error: any }>(
+          `${environment.serverUrl}/curriculums/update-curriculum/${curriculumObj._id}`,
+          { ...curriculumObj }
+        )
         .toPromise()
-        .then((value) => {
-          console.log(":>>> Value: ", value);
+        .then(
+          (value) => {
+            console.log(':>>> Value: ', value);
 
-          this.modalService.dismissAll();
-          this.toast.success("Batch Updated Successfully");
+            this.modalService.dismissAll();
+            this.toast.success('Batch Updated Successfully');
 
-          let idx = this.curriculums.findIndex(x => x._id === curriculumObj._id);
-          this.curriculums[idx] = { ...value.response };
+            let idx = this.curriculums.findIndex(
+              (x) => x._id === curriculumObj._id
+            );
+            this.curriculums[idx] = { ...value.response };
+          },
+          (err) => {
+            console.log('>>> err: ', err);
 
-        }, (err) => {
-          console.log(">>> err: ", err);
-
-          this.toast.error(err.error.message);
-        });
+            this.toast.error(err.error.message);
+          }
+        );
     }
   }
 
-  deleteCurriculum(modalRef : any ,  id: any )
-  {
-    this.modalService.open(modalRef).result.then((value) => {
-      this.httpClient.delete(`${environment.serverUrl}/curriculums/delete/${id}`)
-      .toPromise()
-      .then((value) => {
-        this.toast.success("Batch Deleted Successfully");
-        let idx = this.curriculums.findIndex(x => x._id === id);
-        this.curriculums.splice(idx, 1);
-      }, (err) => {
-        // console.log(">>> error", err);
-      });
-      
-    }, (err) => {
-      console.log(">>> error: ", err);
-      
-    })
+  deleteCurriculum(modalRef: any, id: any) {
+    this.modalService.open(modalRef).result.then(
+      (value) => {
+        this.httpClient
+          .delete(`${environment.serverUrl}/curriculums/delete/${id}`)
+          .toPromise()
+          .then(
+            (value) => {
+              this.toast.success('Batch Deleted Successfully');
+              let idx = this.curriculums.findIndex((x) => x._id === id);
+              this.curriculums.splice(idx, 1);
+            },
+            (err) => {
+              // console.log(">>> error", err);
+            }
+          );
+      },
+      (err) => {
+        console.log('>>> error: ', err);
+      }
+    );
   }
 }
-
-
-
-
-
-
-

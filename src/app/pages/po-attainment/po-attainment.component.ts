@@ -95,12 +95,7 @@ export class PoAttainmentComponent implements OnInit {
 
             this.toast.error("Something went wrong!! Please Try Again...")
           });
-
-
-
       }, (error) => { });
-
-
 
   }
 
