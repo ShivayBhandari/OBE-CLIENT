@@ -7,6 +7,7 @@ import { CO_CODE } from 'src/app/models/constants';
 import { Course } from 'src/app/models/course';
 import { StudentAttainments } from 'src/app/models/student-attainments';
 import { DataService } from 'src/app/services/data.service';
+import { PdfService } from 'src/app/services/pdf.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -32,13 +33,16 @@ export class CoAttainmentComponent implements OnInit {
 
   benchMark: number = 0;
   totalStudents: number = 0;
+  docRef: any;
+  docRefBool: boolean = false;
 
   constructor(
     private toast: ToastrService,
     private router: Router,
     private httpClient: HttpClient,
     private dataService: DataService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    public pdfService: PdfService
   ) { }
 
   ngOnInit(): void {
@@ -134,6 +138,17 @@ export class CoAttainmentComponent implements OnInit {
       indirectAttainment: [...this.totalIndirectAttainment] || [],
       totalAttainment: [...this.totalAttainment]
     };
+
+    this.docRefBool = true;
+    this.docRef = this.pdfService.getPdfContent({
+      courseName: tottalCoAttainmentObj.courseTitle,
+      curriculumName: tottalCoAttainmentObj.curriculumName,
+      ciaMarks: this.ciaAttainment,
+      eseMarks: this.eseAttainment,
+      directAttainment: this.totalDirectAttainment,
+      indirectAttainment: this.totalIndirectAttainment,
+      totalAttianment: this.totalAttainment
+    });
 
     this.httpClient.post(
       `${environment.serverUrl}/totalcoattainments/add-total-co-attainment`,

@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  serverUrl: 'http://localhost:3000'
+  serverUrl: 'http://gne9.gndec.ac.in/api'
 };

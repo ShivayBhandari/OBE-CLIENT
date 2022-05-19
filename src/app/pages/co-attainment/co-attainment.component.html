@@ -236,7 +236,11 @@
       <div class="card-header bg-white">
         <div class="d-flex justify-content-between align-items-center">
           <h4>Total CO Attainment</h4>
-          <button class="btn btn-primary" [disabled]="selectedCourse === undefined || totalDirectAttainment.length === 0" (click)="calculateTotalAttainment()">Calculate</button>
+          <div class="d-flex align-items-end">
+            <button class="btn btn-primary mr-2" *ngIf="docRefBool" (click)="docRef.open()">Open Pdf</button>
+            <button class="btn btn-primary mr-2" *ngIf="docRefBool" (click)="docRef.download('download.pdf')">Download Pdf</button>
+            <button class="btn btn-primary" [disabled]="selectedCourse === undefined || totalDirectAttainment.length === 0" (click)="calculateTotalAttainment()">Calculate</button>
+          </div>
         </div>
       </div>
       <div class="card-body" *ngIf="totalAttainment.length === 0">

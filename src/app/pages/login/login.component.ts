@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
       .toPromise()
       .then((value: { message: string; user: any } | any) => {
         this.loader = false;
-        this.cookieService.set('user', { ...value['user'] }, { expires: 1, secure: true });
+        this.cookieService.set('user', { ...value['user'] }, { expires: 1, sameSite: 'Lax', secure: false });
         localStorage.setItem('user', JSON.stringify(value['user']));
         this.router.navigate(['/home'], { replaceUrl: true })
         // console.log(">>> Value: ", value);
