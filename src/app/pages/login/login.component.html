@@ -1,4 +1,53 @@
-<div class="container-fluid vh-100 px-0">
+<div class="container-fluid vh-100">
+  <div class="row" style="height: inherit;">
+    <div class="col-12 col-sm-6 d-flex flex-column justify-content-center align-items-center px-4 bg-dark">
+      <img src="./../../../assets/gndec-logo.png" alt="GNDEC OBE" class="img-fluid">
+      <h2 class="text-white text-uppercase text-center d-none d-sm-block m-0 mt-4 mb-1">Guru Nanak Dev Engineering College</h2>
+      <h5 class="text-white text-uppercase text-center d-block d-sm-none m-0 mt-2">Guru Nanak Dev Engineering College</h5>
+      <p class="m-0 text-white h3 mb-3">Outcome Based Education</p>
+
+      <p class="mt-5 text-white">
+        <span>Developed By</span>
+        <a href="http://gne9.gndec.ac.in/credit-page" target="_blank" class="ml-1 text-white link-hover">Genconians</a>
+      </p>
+    </div>
+    <div class="col-12 col-sm-6 d-flex flex-column justify-content-center align-items-center">
+      <div class="card w-75 shadow-sm">
+        <div class="card-header bg-white border-0">
+          <h3 class="text-center m-0">Login</h3>
+        </div>
+        <div class="card-body">
+         <form [formGroup]="loginForm" (ngSubmit)="loginUser(loginForm)">
+          <div class="form-group col-12 mt-2">
+            <label for="email" class="text-sm">Email</label>
+            <input class="form-control" placeholder="eg: abc@example.com" formControlName="email" name="email"
+              type="email" required>
+          </div>
+          <div class="form-group col-12 mt-2">
+            <label for="password" class="text-sm">Password</label>
+            <input class="form-control" placeholder="********" formControlName="password" name="password"
+              type="password" required>
+          </div>
+
+          <p class="alert alert-danger text-center h6 mt-2" *ngIf="errorMsg !== undefined">
+            {{ errorMsg }}
+          </p>
+
+          <button type="submit" class="btn text-white col-12 mt-4 btn-dark" [disabled]="loader">
+            Sign In
+            <span *ngIf="loader">&nbsp;</span>
+            <div *ngIf="loader" class="spinner-border spinner-border-sm text-light" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </button> 
+         </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="container-fluid vh-100 px-0">
   <div class="row w-100 m-0 py-3 bg-dark text-white">
     <div class="col">
       <div class="d-flex flex-column justify-content-center align-items-center">
@@ -73,4 +122,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
